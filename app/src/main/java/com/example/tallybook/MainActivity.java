@@ -31,18 +31,22 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        viewPager = findViewById(R.id.viewPager);
-        bottomNavigationBar = findViewById(R.id.bottom_nav);
+
 
         initView();
-    }
-
-    private void initView() {
         initViewPager();
         initBottomNav();
     }
 
+    private void initView() {
+
+        viewPager = findViewById(R.id.viewPager);
+        bottomNavigationBar = findViewById(R.id.bottom_nav);
+
+    }
+
     private void initBottomNav() {
+
         bottomNavigationBar.setTabSelectedListener(this);
         bottomNavigationBar.clearAll();
         bottomNavigationBar.setMode(BottomNavigationBar.MODE_FIXED);
@@ -56,10 +60,10 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
                            .addItem(new BottomNavigationItem(R.drawable.budget_fill,"预算").setInactiveIconResource(R.drawable.budget))
                            .addItem(new BottomNavigationItem(R.drawable.mine_fill,"我的").setInactiveIconResource(R.drawable.mine))
                            .setFirstSelectedPosition(0).initialise();
+
     }
 
     private void initViewPager() {
-        viewPager.setOffscreenPageLimit(5);
 
         fragments = new ArrayList<>();
         fragments.add(new FragmentDetail());
@@ -68,9 +72,11 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
         fragments.add(new FragmentBudget());
         fragments.add(new FragmentMine());
 
+        viewPager.setOffscreenPageLimit(5);
         viewPager.setAdapter(new SectionsPagerAdapter(getSupportFragmentManager(),fragments));
         viewPager.addOnPageChangeListener(this);
         viewPager.setCurrentItem(0);
+
     }
 
     @Override

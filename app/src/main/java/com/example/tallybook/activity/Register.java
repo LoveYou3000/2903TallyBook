@@ -27,9 +27,11 @@ public class Register extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        username = findViewById(R.id.username_reg);
-        password = findViewById(R.id.password_reg);
-        register = findViewById(R.id.register);
+        initView();
+        setListeners();
+    }
+
+    private void setListeners() {
 
         register.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -45,6 +47,7 @@ public class Register extends AppCompatActivity {
                         if (e == null) {
                             Toast.makeText(Register.this, "注册成功", Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(Register.this, Login.class));
+                            finish();
                         } else {
                             Toast.makeText(Register.this, e.toString(), Toast.LENGTH_SHORT).show();
                         }
@@ -52,6 +55,15 @@ public class Register extends AppCompatActivity {
                 });
             }
         });
+
+    }
+
+    private void initView() {
+
+        username = findViewById(R.id.username_reg);
+        password = findViewById(R.id.password_reg);
+        register = findViewById(R.id.register);
+
     }
 
 }

@@ -19,25 +19,25 @@ import cn.bmob.v3.BmobUser;
 
 public class Splash extends AppCompatActivity {
 
-    private TimerTask timerTask = new TimerTask() {
-        @Override
-        public void run() {
-            if (BmobUser.isLogin()) {
-                startActivity(new Intent(Splash.this, MainActivity.class));
-            } else {
-                startActivity(new Intent(Splash.this,Login.class));
-            }
-            finish();
-        }
-    };
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
         Bmob.initialize(this,"4c0d8bc51d99076175282cb6010f0f85");
+
+
         Timer timer = new Timer();
-        timer.schedule(timerTask,2000);
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                if (BmobUser.isLogin()) {
+                    startActivity(new Intent(Splash.this, MainActivity.class));
+                } else {
+                    startActivity(new Intent(Splash.this,Login.class));
+                }
+                finish();
+            }
+        }, 1000);
     }
 }

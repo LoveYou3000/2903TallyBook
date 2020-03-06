@@ -280,99 +280,100 @@ public class FragmentTable extends Fragment {
 
                     if (list.size() == 0) {
                         Toast.makeText(getActivity(), "还没有信息呢", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
+//                        return;
+                    } else {
 
-                    SimpleDateFormat showYMD = new SimpleDateFormat("yyyy-MM-dd");
-                    SimpleDateFormat showMD = new SimpleDateFormat("MM-dd");
+                        SimpleDateFormat showYMD = new SimpleDateFormat("yyyy-MM-dd");
+                        SimpleDateFormat showMD = new SimpleDateFormat("MM-dd");
 
-                    table_data.clear();
-                    dateList.clear();
-                    amountList.clear();
+                        table_data.clear();
+                        dateList.clear();
+                        amountList.clear();
 
-                    double sum = 0d;
-                    for (int i = 0; i < list.size(); i++) {
-                        sum += list.get(i).getAmount();
-                        if (i == list.size() - 1) {
-                            table_data.put(list.get(i).getFullDate(),sum);
-                            sum = 0d;
-                        } else {
-                            if (list.get(i).getFullDate().equals(list.get(i + 1).getFullDate())) {
-
-                            } else {
-                                table_data.put(list.get(i).getFullDate(),sum);
+                        double sum = 0d;
+                        for (int i = 0; i < list.size(); i++) {
+                            sum += list.get(i).getAmount();
+                            if (i == list.size() - 1) {
+                                table_data.put(list.get(i).getFullDate(), sum);
                                 sum = 0d;
+                            } else {
+                                if (list.get(i).getFullDate().equals(list.get(i + 1).getFullDate())) {
+
+                                } else {
+                                    table_data.put(list.get(i).getFullDate(), sum);
+                                    sum = 0d;
+                                }
                             }
                         }
-                    }
 //        for (String date : table_data.keySet()) {
 //            System.out.println(date + " " + table_data.get(date));
 //        }
-                    Date it_date = startDate;
-                    Calendar cal = Calendar.getInstance();
-                    cal.setTime(it_date);
-                    for (;;) {
+                        Date it_date = startDate;
+                        Calendar cal = Calendar.getInstance();
+                        cal.setTime(it_date);
+                        for (; ; ) {
 
-                        if (table_data.get(showYMD.format(it_date)) == null) {
-                            table_data.put(showYMD.format(it_date),0d);
-                        }
-                        cal.add(Calendar.DAY_OF_MONTH,1);
-                        it_date = cal.getTime();
-                        if (it_date.getYear() == endDate.getYear() &&
-                                it_date.getMonth() == endDate.getMonth() && it_date.getDay() == endDate.getDay()) {
-                            break;
-                        }
-
-                    }
-                    for (String date : table_data.keySet()) {
-                        System.out.println(date + " " + table_data.get(date));
-                    }
-
-
-                    int counter = 0;
-                    int current_month = 0;
-                    double period_sum = 0d;
-                    it_date = startDate;
-                    cal.setTime(it_date);
-                    for (int i = 0; ; i++) {
-
-                        if (type == WEEK) {
-                            dateList.add(new AxisValue(i).setLabel(showMD.format(it_date)));
-                            amountList.add(new PointValue(i,Float.parseFloat(String.valueOf(table_data.get(showYMD.format(it_date))))));
-                        } else if (type == MONTH) {
-                            period_sum += table_data.get(showYMD.format(it_date));
-                            if (i % 5 == 0) {
-                                dateList.add(new AxisValue(counter).setLabel(showMD.format(it_date)));
-                                amountList.add(new PointValue(counter, Float.parseFloat(String.valueOf(period_sum))));
-                                period_sum = 0d;
-                                counter++;
+                            if (table_data.get(showYMD.format(it_date)) == null) {
+                                table_data.put(showYMD.format(it_date), 0d);
                             }
-                        } else if (type == YEAR) {
-                            period_sum += table_data.get(showYMD.format(it_date));
-                            if (it_date.getMonth() != current_month) {
-                                current_month++;
-                                dateList.add(new AxisValue(counter).setLabel(showMD.format(it_date)));
-                                amountList.add(new PointValue(counter, Float.parseFloat(String.valueOf(period_sum))));
-                                period_sum = 0d;
-                                counter++;
+                            cal.add(Calendar.DAY_OF_MONTH, 1);
+                            it_date = cal.getTime();
+                            if (it_date.getYear() == endDate.getYear() &&
+                                    it_date.getMonth() == endDate.getMonth() && it_date.getDay() == endDate.getDay()) {
+                                break;
                             }
+
+                        }
+                        for (String date : table_data.keySet()) {
+                            System.out.println(date + " " + table_data.get(date));
                         }
 
-                        cal.add(Calendar.DAY_OF_MONTH,1);
-                        it_date = cal.getTime();
-                        if (it_date.getYear() == endDate.getYear() &&
-                                it_date.getMonth() == endDate.getMonth() && it_date.getDay() == endDate.getDay()) {
-                            if (type == MONTH && i % 5 != 0) {
-                                cal.add(Calendar.DAY_OF_MONTH,-1);
-                                dateList.add(new AxisValue(counter).setLabel(showMD.format(cal.getTime())));
-                                amountList.add(new PointValue(counter, Float.parseFloat(String.valueOf(period_sum))));
+
+                        int counter = 0;
+                        int current_month = 0;
+                        double period_sum = 0d;
+                        it_date = startDate;
+                        cal.setTime(it_date);
+                        for (int i = 0; ; i++) {
+
+                            if (type == WEEK) {
+                                dateList.add(new AxisValue(i).setLabel(showMD.format(it_date)));
+                                amountList.add(new PointValue(i, Float.parseFloat(String.valueOf(table_data.get(showYMD.format(it_date))))));
+                            } else if (type == MONTH) {
+                                period_sum += table_data.get(showYMD.format(it_date));
+                                if (i % 5 == 0) {
+                                    dateList.add(new AxisValue(counter).setLabel(showMD.format(it_date)));
+                                    amountList.add(new PointValue(counter, Float.parseFloat(String.valueOf(period_sum))));
+                                    period_sum = 0d;
+                                    counter++;
+                                }
+                            } else if (type == YEAR) {
+                                period_sum += table_data.get(showYMD.format(it_date));
+                                if (it_date.getMonth() != current_month) {
+                                    current_month++;
+                                    dateList.add(new AxisValue(counter).setLabel(showMD.format(it_date)));
+                                    amountList.add(new PointValue(counter, Float.parseFloat(String.valueOf(period_sum))));
+                                    period_sum = 0d;
+                                    counter++;
+                                }
                             }
-                            break;
+
+                            cal.add(Calendar.DAY_OF_MONTH, 1);
+                            it_date = cal.getTime();
+                            if (it_date.getYear() == endDate.getYear() &&
+                                    it_date.getMonth() == endDate.getMonth() && it_date.getDay() == endDate.getDay()) {
+                                if (type == MONTH && i % 5 != 0) {
+                                    cal.add(Calendar.DAY_OF_MONTH, -1);
+                                    dateList.add(new AxisValue(counter).setLabel(showMD.format(cal.getTime())));
+                                    amountList.add(new PointValue(counter, Float.parseFloat(String.valueOf(period_sum))));
+                                }
+                                break;
+                            }
                         }
                     }
 
                     Line line = new Line(amountList).setColor(Color.parseColor("#e00032"));
-                    List<Line> lines = new ArrayList<Line>();
+                    List<Line> lines = new ArrayList<>();
                     line.setShape(ValueShape.CIRCLE);
                     line.setCubic(false);
                     line.setFilled(false);
@@ -410,10 +411,9 @@ public class FragmentTable extends Fragment {
                     v.right= 7;
                     table_line_chart.setCurrentViewport(v);
 
-
                 } else {
                     Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                    System.out.println(e.getErrorCode() + " " + e.getMessage());;
+                    System.out.println(e.getErrorCode() + " " + e.getMessage());
                 }
             }
         });

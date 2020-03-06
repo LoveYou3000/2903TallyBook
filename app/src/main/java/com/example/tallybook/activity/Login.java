@@ -20,7 +20,7 @@ import cn.bmob.v3.listener.SaveListener;
 
 public class Login extends AppCompatActivity {
 
-    private EditText email;
+    private EditText username;
     private EditText password;
     private TextView login;
     private TextView reg;
@@ -30,16 +30,17 @@ public class Login extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        email = findViewById(R.id.name_login);
-        password = findViewById(R.id.password_login);
-        login = findViewById(R.id.login);
-        reg = findViewById(R.id.reg);
+        initView();
+        setListeners();
+    }
+
+    private void setListeners() {
 
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 User user = new User();
-                user.setUsername(email.getText().toString().trim());
+                user.setUsername(username.getText().toString().trim());
                 user.setPassword(password.getText().toString().trim());
 
                 user.login(new SaveListener<User>() {
@@ -50,7 +51,7 @@ public class Login extends AppCompatActivity {
                             startActivity(new Intent(Login.this, MainActivity.class));
                             finish();
                         } else {
-                            Toast.makeText(Login.this, "登录失败" + e, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Login.this, "登录失败" + e.getMessage(), Toast.LENGTH_SHORT).show();
                             password.setText("");
                         }
                     }
@@ -65,6 +66,16 @@ public class Login extends AppCompatActivity {
                 //finish();
             }
         });
+
+    }
+
+    private void initView() {
+
+        username = findViewById(R.id.name_login);
+        password = findViewById(R.id.password_login);
+        login = findViewById(R.id.login);
+        reg = findViewById(R.id.reg);
+
     }
 
 
