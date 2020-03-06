@@ -7,24 +7,16 @@ import java.util.Date;
 import cn.bmob.v3.BmobObject;
 
 public class Detail extends BmobObject {
-    private double amount;
+    private Double amount;
     private User user;
     private String direction;
     private String category;
 
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
-    public double getAmount() {
+    public Double getAmount() {
         return amount;
     }
 
-    public void setAmount(double amount) {
+    public void setAmount(Double amount) {
         this.amount = amount;
     }
 
@@ -42,6 +34,14 @@ public class Detail extends BmobObject {
 
     public void setDirection(String direction) {
         this.direction = direction;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public String getFullDate() {

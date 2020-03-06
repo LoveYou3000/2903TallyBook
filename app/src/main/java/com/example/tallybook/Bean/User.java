@@ -4,15 +4,7 @@ import cn.bmob.v3.BmobUser;
 
 public class User extends BmobUser {
     private String sex;
-    private int portraitID;
-
-    public int getPortraitID() {
-        return portraitID;
-    }
-
-    public void setPortraitID(int portraitID) {
-        this.portraitID = portraitID;
-    }
+    private Integer portraitID;
 
     public String getSex() {
         return sex;
@@ -20,5 +12,13 @@ public class User extends BmobUser {
 
     public void setSex(String sex) {
         this.sex = sex;
+    }
+
+    public Integer getPortraitID() {
+        return portraitID;
+    }
+
+    public void setPortraitID(Integer portraitID) {
+        this.portraitID = portraitID;
     }
 }
