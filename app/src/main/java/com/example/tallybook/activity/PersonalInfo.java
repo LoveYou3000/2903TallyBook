@@ -1,5 +1,7 @@
 package com.example.tallybook.activity;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +26,8 @@ import cn.bmob.v3.listener.UpdateListener;
 
 public class PersonalInfo extends AppCompatActivity {
 
+    private User user;
+
     private ImageView personal_back;
     private LinearLayout personal_head;
     private LinearLayout personal_username;
@@ -32,6 +36,8 @@ public class PersonalInfo extends AppCompatActivity {
     private ImageView personal_head_show;
     private TextView personal_username_show;
     private TextView personal_sex_show;
+
+    private TextView logout;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -180,9 +186,31 @@ public class PersonalInfo extends AppCompatActivity {
             }
         });
 
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                android.app.AlertDialog.Builder confirm_logout = new android.app.AlertDialog.Builder(PersonalInfo.this);
+                confirm_logout.setMessage("确认退出吗?").setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        BmobUser.logOut();
+                        startActivity(new Intent(PersonalInfo.this,Login.class));
+                        finish();
+                    }
+                }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                }).create().show();
+
+            }
+        });
+
     }
 
     private void initView() {
+        user = BmobUser.getCurrentUser(User.class);
 
         personal_back = findViewById(R.id.personal_back);
         personal_head = findViewById(R.id.personal_head);
@@ -193,9 +221,9 @@ public class PersonalInfo extends AppCompatActivity {
         personal_username_show = findViewById(R.id.personal_username_show);
         personal_sex_show = findViewById(R.id.personal_sex_show);
 
-        User user = BmobUser.getCurrentUser(User.class);
         personal_username_show.setText(user.getUsername());
         personal_sex_show.setText(user.getSex());
 
+        logout = findViewById(R.id.logout);
     }
 }

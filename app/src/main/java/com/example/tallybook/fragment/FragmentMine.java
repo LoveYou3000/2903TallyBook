@@ -50,7 +50,7 @@ public class FragmentMine extends Fragment {
     private TextView mine_count_day;
     private TextView mine_count_detail;
     private ImageView mine_more;
-    private TextView logout;
+
 
     private TextView mine_budget_amount;
     private TextView mine_remain_amount;
@@ -155,26 +155,6 @@ public class FragmentMine extends Fragment {
 
     private void setListeners() {
 
-        logout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder confirm_logout = new AlertDialog.Builder(getActivity());
-                confirm_logout.setMessage("确认退出吗?").setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        BmobUser.logOut();
-                        startActivity(new Intent(getActivity(),Login.class));
-                    }
-                }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                }).create().show();
-
-            }
-        });
-
         mine_more.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -210,7 +190,6 @@ public class FragmentMine extends Fragment {
         mine_count_day = getActivity().findViewById(R.id.mine_count_day);
         mine_count_detail = getActivity().findViewById(R.id.mine_count_detail);
         mine_more = getActivity().findViewById(R.id.mine_more);
-        logout = getActivity().findViewById(R.id.logout);
 
         mine_budget_amount = getActivity().findViewById(R.id.mine_budget_amount);
         mine_remain_amount = getActivity().findViewById(R.id.mine_remain_amount);
