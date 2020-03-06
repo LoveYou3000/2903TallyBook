@@ -5,9 +5,9 @@ import cn.bmob.v3.BmobObject;
 public class Saving extends BmobObject {
     private String saving_purpose;
     private User user;
-    private double saving_amount;
+    private Double saving_amount;
     private boolean saving_status;
-    private double saving_already;
+    private Double saving_already;
 
     public String getSaving_purpose() {
         return saving_purpose;
@@ -25,11 +25,11 @@ public class Saving extends BmobObject {
         this.user = user;
     }
 
-    public double getSaving_amount() {
+    public Double getSaving_amount() {
         return saving_amount;
     }
 
-    public void setSaving_amount(double saving_amount) {
+    public void setSaving_amount(Double saving_amount) {
         this.saving_amount = saving_amount;
     }
 
@@ -41,11 +41,11 @@ public class Saving extends BmobObject {
         this.saving_status = saving_status;
     }
 
-    public double getSaving_already() {
+    public Double getSaving_already() {
         return saving_already;
     }
 
-    public void setSaving_already(double saving_already) {
+    public void setSaving_already(Double saving_already) {
         this.saving_already = saving_already;
     }
 }
