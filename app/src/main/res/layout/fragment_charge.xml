@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:background="@color/md_yellow_600"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <org.angmarch.views.NiceSpinner
+            android:layout_gravity="center_horizontal"
+            android:textSize="18sp"
+            android:id="@+id/charge_nice_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:entries="@array/directions"
+            android:layout_margin="10dp"/>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <LinearLayout
+            android:layout_marginLeft="20sp"
+            android:orientation="vertical"
+            android:id="@+id/charge_category_area"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

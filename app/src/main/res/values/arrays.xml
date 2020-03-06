@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="directions">
+
+        <item>支出</item>
+        <item>收入</item>
+
+    </string-array>
+
+    <string-array name="out_category">
+
+        <item>food_and_beverage</item>
+        <item>shopping</item>
+        <item>daily</item>
+        <item>the_traffic</item>
+
+        <item>vegetables</item>
+        <item>fruit</item>
+        <item>snacks</item>
+        <item>movement</item>
+
+        <item>entertainment</item>
+        <item>communication</item>
+        <item>dress</item>
+        <item>beauty</item>
+
+        <item>housing</item>
+        <item>that_occupy_the_home</item>
+        <item>the_child</item>
+        <item>elders</item>
+
+        <item>social</item>
+        <item>travel</item>
+        <item>alcohol_tobacco</item>
+        <item>digital</item>
+
+        <item>the_car</item>
+        <item>medical</item>
+        <item>books</item>
+        <item>learning</item>
+
+        <item>pet</item>
+        <item>the_amounts</item>
+        <item>gift</item>
+        <item>office</item>
+
+        <item>maintenance</item>
+        <item>donation</item>
+        <item>lottery</item>
+        <item>relatives_and_friends</item>
+
+        <item>courier</item>
+
+    </string-array>
+
+    <string-array name="in_category" >
+
+        <item>wage</item>
+        <item>part_time</item>
+        <item>financial</item>
+        <item>the_amounts</item>
+        <item>other</item>
+
+    </string-array>
+
+</resources>

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:background="@color/md_yellow_600"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <LinearLayout
+            android:id="@+id/choose_in_out"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <org.angmarch.views.NiceSpinner
+                android:textSize="18sp"
+                android:id="@+id/table_nice_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:entries="@array/directions"
+                android:layout_margin="10dp"/>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <Button
+                    android:background="#000"
+                    android:textColor="#fff"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:id="@+id/table_select_week"
+                    android:text="周"
+                    android:layout_weight="0.3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <Button
+                    android:background="#fff"
+                    android:textColor="#000"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:id="@+id/table_select_month"
+                    android:text="月"
+                    android:layout_weight="0.3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <Button
+                    android:background="#fff"
+                    android:textColor="#000"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="20dp"
+                    android:id="@+id/table_select_year"
+                    android:text="年"
+                    android:layout_weight="0.3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <TextView
+            android:id="@+id/table_show_selected"
+            android:layout_margin="10sp"
+            android:textSize="20sp"
+            android:text="本周"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <lecho.lib.hellocharts.view.LineChartView
+            android:layout_margin="10dp"
+            android:id="@+id/table_line_chart"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#ffffff" />
+
+<!--        <ListView-->
+<!--            android:visibility="gone"-->
+<!--            android:divider="@null"-->
+<!--            android:scrollbars="none"-->
+<!--            android:layout_marginTop="15dp"-->
+<!--            android:id="@+id/table_listview"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent" />-->
+
+    </LinearLayout>
+
+</LinearLayout>
