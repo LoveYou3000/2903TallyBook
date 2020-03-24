@@ -2,6 +2,7 @@ package com.example.tallybook.adapter;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Point;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -157,11 +158,27 @@ public class DetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                     }
                 });
 
-                detail_more_delete.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        show.dismiss();
-                    }
+                detail_more_delete.setOnClickListener(v2 -> {
+
+                    AlertDialog.Builder detail_more_delete1 = new AlertDialog.Builder(context);
+                    detail_more_delete1.setTitle("确认").setMessage("确认删除吗?\n\n注意:删除后不可恢复").setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            detail.delete(new UpdateListener() {
+                                @Override
+                                public void done(BmobException e) {
+                                    if (e == null) {
+                                        Toast.makeText(context, "删除成功", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(context, "删除失败", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+                        }
+                    }).setNegativeButton("取消",null).show();
+
+
+                    show.dismiss();
                 });
                 return false;
             });
