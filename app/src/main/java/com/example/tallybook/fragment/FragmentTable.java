@@ -160,7 +160,7 @@ public class FragmentTable extends Fragment {
                         showWeekData("支出");
                     else
                         showWeekData("收入");
-                } else if (table_show_selected.getText().toString().equals("本月")){
+                } else if (table_show_selected.getText().toString().equals("本月")) {
                     if (position == 0)
                         showMonthData("支出");
                     else
@@ -181,7 +181,7 @@ public class FragmentTable extends Fragment {
         Date startDate = getThisMonday(new Date());
         Date endDate = getNextMonday(new Date());
 
-        createTable(direction,startDate,endDate,WEEK);
+        createTable(direction, startDate, endDate, WEEK);
 
     }
 
@@ -208,7 +208,7 @@ public class FragmentTable extends Fragment {
         endCal.set(Calendar.MINUTE, 0);
         endCal.set(Calendar.SECOND, 0);
 
-        createTable(direction,startCal.getTime(),endCal.getTime(),MONTH);
+        createTable(direction, startCal.getTime(), endCal.getTime(), MONTH);
 
     }
 
@@ -253,24 +253,24 @@ public class FragmentTable extends Fragment {
         endCal.set(Calendar.MINUTE, 0);
         endCal.set(Calendar.SECOND, 0);
 
-        createTable(direction,startCal.getTime(),endCal.getTime(),YEAR);
+        createTable(direction, startCal.getTime(), endCal.getTime(), YEAR);
     }
 
-    public void createTable(String direction,Date startDate,Date endDate,int type) {
+    public void createTable(String direction, Date startDate, Date endDate, int type) {
 
         BmobQuery<Detail> startQuery = new BmobQuery<>();
-        startQuery.addWhereGreaterThan("createdAt",new BmobDate(startDate));
+        startQuery.addWhereGreaterThan("createdAt", new BmobDate(startDate));
 
         BmobQuery<Detail> endQuery = new BmobQuery<>();
-        endQuery.addWhereLessThan("createdAt",new BmobDate(endDate));
+        endQuery.addWhereLessThan("createdAt", new BmobDate(endDate));
 
         List<BmobQuery<Detail>> bmobQueryList = new ArrayList<>();
         bmobQueryList.add(startQuery);
         bmobQueryList.add(endQuery);
 
         BmobQuery<Detail> periodQuery = new BmobQuery<>();
-        periodQuery.addWhereEqualTo("user",new BmobPointer(user));
-        periodQuery.addWhereEqualTo("direction",direction);
+        periodQuery.addWhereEqualTo("user", new BmobPointer(user));
+        periodQuery.addWhereEqualTo("direction", direction);
         periodQuery.order("createdAt");
         periodQuery.and(bmobQueryList);
         periodQuery.findObjects(new FindListener<Detail>() {
@@ -305,9 +305,9 @@ public class FragmentTable extends Fragment {
                                 }
                             }
                         }
-//        for (String date : table_data.keySet()) {
-//            System.out.println(date + " " + table_data.get(date));
-//        }
+//                        for (String date : table_data.keySet()) {
+//                            System.out.println(date + " " + table_data.get(date));
+//                        }
                         Date it_date = startDate;
                         Calendar cal = Calendar.getInstance();
                         cal.setTime(it_date);
@@ -408,7 +408,7 @@ public class FragmentTable extends Fragment {
                     //设置X轴数据的显示个数（x轴0-7个数据）
                     Viewport v = new Viewport(table_line_chart.getMaximumViewport());
                     v.left = 0;
-                    v.right= 7;
+                    v.right = 7;
                     table_line_chart.setCurrentViewport(v);
 
                 } else {
@@ -431,9 +431,9 @@ public class FragmentTable extends Fragment {
     private Date getThisMonday(Date today) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(today);
-        cal.add(Calendar.HOUR,-cal.get(Calendar.HOUR));
-        cal.add(Calendar.MINUTE,-cal.get(Calendar.MINUTE));
-        cal.add(Calendar.SECOND,-Calendar.SECOND);
+        cal.set(Calendar.HOUR, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
 //        cal.set(today.getYear() + 1900,today.getMonth() + 1,today.getDay(),0,0,0);
         // 获得当前日期是一个星期的第几天
         int dayWeek = cal.get(Calendar.DAY_OF_WEEK);
