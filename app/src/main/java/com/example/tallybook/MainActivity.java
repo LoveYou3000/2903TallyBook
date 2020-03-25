@@ -19,6 +19,8 @@ import androidx.viewpager.widget.ViewPager;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.bmob.v3.Bmob;
+
 public class MainActivity extends AppCompatActivity implements BottomNavigationBar.OnTabSelectedListener, ViewPager.OnPageChangeListener {
 
     private NoSlideViewPager viewPager;
@@ -31,7 +33,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
+        Bmob.initialize(this, "4c0d8bc51d99076175282cb6010f0f85");
 
         initView();
         initViewPager();

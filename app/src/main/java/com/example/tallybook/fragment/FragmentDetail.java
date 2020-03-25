@@ -76,7 +76,7 @@ public class FragmentDetail extends Fragment implements DateTimeDialog.MyOnDateS
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        Bmob.initialize(getActivity(), "4c0d8bc51d99076175282cb6010f0f85");
+//        Bmob.initialize(getActivity(), "4c0d8bc51d99076175282cb6010f0f85");
 
         initAppBar();
         initView();

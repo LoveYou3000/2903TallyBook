@@ -29,6 +29,7 @@ import com.example.tallybook.activity.PersonalInfo;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobQuery;
@@ -49,7 +50,6 @@ public class FragmentMine extends Fragment {
     private TextView mine_name;
     private TextView mine_count_day;
     private TextView mine_count_detail;
-    private ImageView mine_more;
 
 
     private TextView mine_budget_amount;
@@ -62,14 +62,14 @@ public class FragmentMine extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_mine,container,false);
+        return inflater.inflate(R.layout.fragment_mine, container, false);
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        Bmob.initialize(getActivity(),"4c0d8bc51d99076175282cb6010f0f85");
+//        Bmob.initialize(getActivity(), "4c0d8bc51d99076175282cb6010f0f85");
 
         initView();
         setListeners();
@@ -83,7 +83,7 @@ public class FragmentMine extends Fragment {
         mine_name.setText(user.getUsername());
 
         BmobQuery<Detail> bmobQuery = new BmobQuery<>();
-        bmobQuery.addWhereEqualTo("user",new BmobPointer(user));
+        bmobQuery.addWhereEqualTo("user", new BmobPointer(user));
         bmobQuery.findObjects(new FindListener<Detail>() {
             @Override
             public void done(List<Detail> list, BmobException e) {
@@ -106,9 +106,9 @@ public class FragmentMine extends Fragment {
         });
 
         BmobQuery<Budget> budgetBmobQuery = new BmobQuery<>();
-        budgetBmobQuery.addWhereEqualTo("user",new BmobPointer(user));
-        budgetBmobQuery.addWhereEqualTo("year",new Date().getYear() + 1900);
-        budgetBmobQuery.addWhereEqualTo("month",new Date().getMonth() + 1);
+        budgetBmobQuery.addWhereEqualTo("user", new BmobPointer(user));
+        budgetBmobQuery.addWhereEqualTo("year", new Date().getYear() + 1900);
+        budgetBmobQuery.addWhereEqualTo("month", new Date().getMonth() + 1);
         budgetBmobQuery.findObjects(new FindListener<Budget>() {
             @Override
             public void done(List<Budget> list, BmobException e) {
@@ -124,8 +124,8 @@ public class FragmentMine extends Fragment {
         });
 
         BmobQuery<Saving> saving_complete_timeBmobQuery = new BmobQuery<>();
-        saving_complete_timeBmobQuery.addWhereEqualTo("user",new BmobPointer(user));
-        saving_complete_timeBmobQuery.addWhereEqualTo("saving_status",true);
+        saving_complete_timeBmobQuery.addWhereEqualTo("user", new BmobPointer(user));
+        saving_complete_timeBmobQuery.addWhereEqualTo("saving_status", true);
         saving_complete_timeBmobQuery.count(Saving.class, new CountListener() {
             @Override
             public void done(Integer integer, BmobException e) {
@@ -138,8 +138,8 @@ public class FragmentMine extends Fragment {
         });
 
         BmobQuery<Saving> saving_needBmonQuery = new BmobQuery<>();
-        saving_needBmonQuery.addWhereEqualTo("user",new BmobPointer(user));
-        saving_needBmonQuery.addWhereEqualTo("saving_status",false);
+        saving_needBmonQuery.addWhereEqualTo("user", new BmobPointer(user));
+        saving_needBmonQuery.addWhereEqualTo("saving_status", false);
         saving_needBmonQuery.findObjects(new FindListener<Saving>() {
             @Override
             public void done(List<Saving> list, BmobException e) {
@@ -155,27 +155,14 @@ public class FragmentMine extends Fragment {
 
     private void setListeners() {
 
-        mine_more.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showMineMoreMenu(v);
-            }
+        mine_head.setOnClickListener(v -> {
+            startActivity(new Intent(getActivity(), PersonalInfo.class));
+            mine_name.setText(BmobUser.getCurrentUser(User.class).getUsername());
         });
 
-        mine_head.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getActivity(),PersonalInfo.class));
-                mine_name.setText(BmobUser.getCurrentUser(User.class).getUsername());
-            }
-        });
-
-        mine_swipe.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                mine_swipe.setRefreshing(false);
-                ShowData();
-            }
+        mine_swipe.setOnRefreshListener(() -> {
+            mine_swipe.setRefreshing(false);
+            ShowData();
         });
 
     }
@@ -183,75 +170,17 @@ public class FragmentMine extends Fragment {
     private void initView() {
         user = BmobUser.getCurrentUser(User.class);
 
-        mine_swipe = getActivity().findViewById(R.id.mine_swipe);
+        mine_swipe = Objects.requireNonNull(getActivity()).findViewById(R.id.mine_swipe);
 
         mine_head = getActivity().findViewById(R.id.mine_head);
         mine_name = getActivity().findViewById(R.id.mine_name);
         mine_count_day = getActivity().findViewById(R.id.mine_count_day);
         mine_count_detail = getActivity().findViewById(R.id.mine_count_detail);
-        mine_more = getActivity().findViewById(R.id.mine_more);
 
         mine_budget_amount = getActivity().findViewById(R.id.mine_budget_amount);
         mine_remain_amount = getActivity().findViewById(R.id.mine_remain_amount);
 
         mine_saving_complete = getActivity().findViewById(R.id.mine_saving_complete);
         mine_saving_need = getActivity().findViewById(R.id.mine_saving_need);
-    }
-
-    public void showMineMoreMenu(View view) {
-        PopupMenu popupMenu = new PopupMenu(getActivity(),view);
-        popupMenu.getMenuInflater().inflate(R.menu.mine_more,popupMenu.getMenu());
-
-        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                if (item.getTitle().equals("修改密码")) {
-                    final AlertDialog.Builder change_password = new AlertDialog.Builder(getActivity());
-                    View password_view = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_change_password,null);
-
-                    EditText old_password = password_view.findViewById(R.id.old_password);
-                    EditText new_password = password_view.findViewById(R.id.new_password);
-                    TextView change_password_cancel = password_view.findViewById(R.id.change_password_cancel);
-                    TextView change_password_confirm = password_view.findViewById(R.id.change_password_confirm);
-
-                    change_password.setView(password_view).create();
-                    AlertDialog show = change_password.show();
-
-                    change_password_cancel.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            show.dismiss();
-                        }
-                    });
-
-                    change_password_confirm.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-
-                            BmobUser.updateCurrentUserPassword(old_password.getText().toString(),
-                                    new_password.getText().toString(), new UpdateListener() {
-                                @Override
-                                public void done(BmobException e) {
-                                    if (e == null) {
-                                        Toast.makeText(getActivity(), "更新成功,请重新登陆", Toast.LENGTH_SHORT).show();
-                                        BmobUser.logOut();
-                                        startActivity(new Intent(getActivity(),Login.class));
-                                        getActivity().finish();
-                                    } else {
-                                        Toast.makeText(getActivity(), "更新失败" + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            });
-
-                            show.dismiss();
-                        }
-                    });
-
-                }
-                return false;
-            }
-        });
-
-        popupMenu.show();
     }
 }
