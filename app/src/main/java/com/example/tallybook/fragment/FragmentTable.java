@@ -1,16 +1,12 @@
 package com.example.tallybook.fragment;
 
-import android.app.AlertDialog;
+import android.annotation.SuppressLint;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,19 +19,16 @@ import com.example.tallybook.Bean.User;
 import com.example.tallybook.R;
 
 import org.angmarch.views.NiceSpinner;
-import org.angmarch.views.OnSpinnerItemSelectedListener;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
-import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobDate;
@@ -52,25 +45,76 @@ import lecho.lib.hellocharts.model.ValueShape;
 import lecho.lib.hellocharts.model.Viewport;
 import lecho.lib.hellocharts.view.LineChartView;
 
+/**
+ * 图表页面
+ *
+ * @author MACHENIKE
+ */
 public class FragmentTable extends Fragment {
 
+    /**
+     * 当前用户
+     */
     private User user;
 
-    private NiceSpinner table_nice_spinner;
-    private TextView table_show_selected;
-    private Button table_select_week;
-    private Button table_select_month;
-    private Button table_select_year;
+    /**
+     * 下拉列表控件
+     */
+    private NiceSpinner tableNiceSpinner;
 
-    private LineChartView table_line_chart;
-//    private ListView table_listview;
+    /**
+     * 选择 周\月\年 之后的提示语
+     */
+    private TextView tableShowSelected;
 
-    private Map<String, Double> table_data;
+    /**
+     * 选择周
+     */
+    private Button tableSelectWeek;
+
+    /**
+     * 选择月
+     */
+    private Button tableSelectMonth;
+
+    /**
+     * 选择年
+     */
+    private Button tableSelectYear;
+
+    /**
+     * 折线图
+     */
+    private LineChartView tableLineChart;
+
+    /**
+     * 数据
+     */
+    private Map<String, Double> tableData;
+
+    /**
+     * 日期列表  用于折线图的X轴
+     */
     private List<AxisValue> dateList;
+
+    /**
+     * 金额列表  用于折线图的Y轴
+     */
     private List<PointValue> amountList;
 
+    /**
+     * 周标志
+     */
     private final int WEEK = 0;
+
+    /**
+     * 月标志
+     */
     private final int MONTH = 1;
+
+    /**
+     * 年标志
+     */
     private final int YEAR = 2;
 
     @Nullable
@@ -83,100 +127,125 @@ public class FragmentTable extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-//        Bmob.initialize(getActivity(), "4c0d8bc51d99076175282cb6010f0f85");
-
         initView();
         setListeners();
 
-        showWeekData(table_nice_spinner.getText().toString());
+        showWeekData(tableNiceSpinner.getText().toString());
     }
 
+    /**
+     * @param msg 要显示的信息
+     * @return void
+     * @Author MACHENIKE
+     * @Description TODO 显示Toast信息
+     **/
+    private void showToast(String msg) {
+        Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * @param msg 要显示的信息
+     * @param e   异常信息
+     * @return void
+     * @Author MACHENIKE
+     * @Description TODO 显示Toast信息
+     **/
+    private void showToast(String msg, BmobException e) {
+        Toast.makeText(getActivity(), msg + "\n" + e.getErrorCode() + "\n" + e.getMessage(), Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * @return void
+     * @Author MACHENIKE
+     * @Description TODO 获取控件及初始化
+     **/
     private void initView() {
 
         user = BmobUser.getCurrentUser(User.class);
 
-        table_data = new HashMap<>();
+        tableData = new HashMap<>();
         dateList = new ArrayList<>();
         amountList = new ArrayList<>();
 
-        table_nice_spinner = getActivity().findViewById(R.id.table_nice_spinner);
-        table_show_selected = getActivity().findViewById(R.id.table_show_selected);
-        table_select_week = getActivity().findViewById(R.id.table_select_week);
-        table_select_month = getActivity().findViewById(R.id.table_select_month);
-        table_select_year = getActivity().findViewById(R.id.table_select_year);
-        table_line_chart = getActivity().findViewById(R.id.table_line_chart);
+        tableNiceSpinner = Objects.requireNonNull(getActivity()).findViewById(R.id.table_nice_spinner);
+        tableShowSelected = getActivity().findViewById(R.id.table_show_selected);
+        tableSelectWeek = getActivity().findViewById(R.id.table_select_week);
+        tableSelectMonth = getActivity().findViewById(R.id.table_select_month);
+        tableSelectYear = getActivity().findViewById(R.id.table_select_year);
+        tableLineChart = getActivity().findViewById(R.id.table_line_chart);
 
     }
 
+    /**
+     * @return void
+     * @Author MACHENIKE
+     * @Description TODO 控件设置监听器
+     **/
     private void setListeners() {
 
-        table_select_week.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                table_show_selected.setText("本周");
-                table_select_week.setBackgroundColor(Color.BLACK);
-                table_select_week.setTextColor(Color.WHITE);
-                table_select_month.setBackgroundColor(Color.WHITE);
-                table_select_month.setTextColor(Color.BLACK);
-                table_select_year.setBackgroundColor(Color.WHITE);
-                table_select_year.setTextColor(Color.BLACK);
-                showWeekData(table_nice_spinner.getText().toString());
-            }
+        //选择周
+        tableSelectWeek.setOnClickListener(v -> {
+            tableShowSelected.setText("本周");
+            tableSelectWeek.setBackgroundColor(Color.BLACK);
+            tableSelectWeek.setTextColor(Color.WHITE);
+            tableSelectMonth.setBackgroundColor(Color.WHITE);
+            tableSelectMonth.setTextColor(Color.BLACK);
+            tableSelectYear.setBackgroundColor(Color.WHITE);
+            tableSelectYear.setTextColor(Color.BLACK);
+            showWeekData(tableNiceSpinner.getText().toString());
         });
 
-        table_select_month.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                table_show_selected.setText("本月");
-                table_select_month.setBackgroundColor(Color.BLACK);
-                table_select_month.setTextColor(Color.WHITE);
-                table_select_week.setBackgroundColor(Color.WHITE);
-                table_select_week.setTextColor(Color.BLACK);
-                table_select_year.setBackgroundColor(Color.WHITE);
-                table_select_year.setTextColor(Color.BLACK);
-                showMonthData(table_nice_spinner.getText().toString());
-            }
+        //选择月
+        tableSelectMonth.setOnClickListener(v -> {
+            tableShowSelected.setText("本月");
+            tableSelectMonth.setBackgroundColor(Color.BLACK);
+            tableSelectMonth.setTextColor(Color.WHITE);
+            tableSelectWeek.setBackgroundColor(Color.WHITE);
+            tableSelectWeek.setTextColor(Color.BLACK);
+            tableSelectYear.setBackgroundColor(Color.WHITE);
+            tableSelectYear.setTextColor(Color.BLACK);
+            showMonthData(tableNiceSpinner.getText().toString());
         });
 
-        table_select_year.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                table_show_selected.setText("本年");
-                table_select_year.setBackgroundColor(Color.BLACK);
-                table_select_year.setTextColor(Color.WHITE);
-                table_select_week.setBackgroundColor(Color.WHITE);
-                table_select_week.setTextColor(Color.BLACK);
-                table_select_month.setBackgroundColor(Color.WHITE);
-                table_select_month.setTextColor(Color.BLACK);
-                showYearData(table_nice_spinner.getText().toString());
-            }
+        //选择年
+        tableSelectYear.setOnClickListener(v -> {
+            tableShowSelected.setText("本年");
+            tableSelectYear.setBackgroundColor(Color.BLACK);
+            tableSelectYear.setTextColor(Color.WHITE);
+            tableSelectWeek.setBackgroundColor(Color.WHITE);
+            tableSelectWeek.setTextColor(Color.BLACK);
+            tableSelectMonth.setBackgroundColor(Color.WHITE);
+            tableSelectMonth.setTextColor(Color.BLACK);
+            showYearData(tableNiceSpinner.getText().toString());
         });
 
-        table_nice_spinner.setOnSpinnerItemSelectedListener(new OnSpinnerItemSelectedListener() {
-            @Override
-            public void onItemSelected(NiceSpinner parent, View view, int position, long id) {
-                if (table_show_selected.getText().toString().equals("本周")) {
-                    if (position == 0)
-                        showWeekData("支出");
-                    else
-                        showWeekData("收入");
-                } else if (table_show_selected.getText().toString().equals("本月")) {
-                    if (position == 0)
-                        showMonthData("支出");
-                    else
-                        showMonthData("收入");
-                } else if (table_show_selected.getText().toString().equals("本年")) {
-                    if (position == 0)
-                        showYearData("支出");
-                    else
-                        showYearData("收入");
+        //下拉列表
+        tableNiceSpinner.setOnSpinnerItemSelectedListener((parent, view, position, id) -> {
+            if ("本周".equals(tableShowSelected.getText().toString())) {
+                if (position == 0) {
+                    showWeekData("支出");
+                } else {
+                    showWeekData("收入");
+                }
+            } else if ("本月".equals(tableShowSelected.getText().toString())) {
+                if (position == 0) {
+                    showMonthData("支出");
+                } else {
+                    showMonthData("收入");
+                }
+            } else if ("本年".equals(tableShowSelected.getText().toString())) {
+                if (position == 0) {
+                    showYearData("支出");
+                } else {
+                    showYearData("收入");
                 }
             }
         });
 
     }
 
-    public void showWeekData(String direction) {
+    //按照去向显示一周数据
+    private void showWeekData(String direction) {
 
         Date startDate = getThisMonday(new Date());
         Date endDate = getNextMonday(new Date());
@@ -185,7 +254,8 @@ public class FragmentTable extends Fragment {
 
     }
 
-    public void showMonthData(String direction) {
+    //按照去向显示一月数据
+    private void showMonthData(String direction) {
 
         Calendar today = Calendar.getInstance();
         today.setTime(new Date());
@@ -201,38 +271,15 @@ public class FragmentTable extends Fragment {
         startCal.set(Calendar.SECOND, 0);
 
         Calendar endCal = Calendar.getInstance();
-        endCal.set(Calendar.YEAR, year);
-        endCal.set(Calendar.MONTH, month);
-        endCal.set(Calendar.DAY_OF_MONTH, 1);
-        endCal.set(Calendar.HOUR_OF_DAY, 0);
-        endCal.set(Calendar.MINUTE, 0);
-        endCal.set(Calendar.SECOND, 0);
+        endCal.setTime(startCal.getTime());
+        endCal.add(Calendar.MONTH, 1);
 
         createTable(direction, startCal.getTime(), endCal.getTime(), MONTH);
 
     }
 
-    public void showYearData(String direction) {
-//        SimpleDateFormat showYMD = new SimpleDateFormat("yyyy-MM-dd");
-//
-//        Date today = new Date();
-//        int year = today.getYear() + 1900;
-//        String start_str = year + "-01-01";
-//        String end_str = (year + 1) + "-01-01";
-//
-//        Date startDate = null;
-//        try {
-//            startDate = showYMD.parse(start_str);
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
-//        Date endDate = null;
-//        try {
-//            endDate = showYMD.parse(end_str);
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
-
+    //按照去向显示一年数据
+    private void showYearData(String direction) {
         Calendar today = Calendar.getInstance();
         today.setTime(new Date());
         int year = today.get(Calendar.YEAR);
@@ -246,18 +293,16 @@ public class FragmentTable extends Fragment {
         startCal.set(Calendar.SECOND, 0);
 
         Calendar endCal = Calendar.getInstance();
-        endCal.set(Calendar.YEAR, year + 1);
-        endCal.set(Calendar.MONTH, 0);
-        endCal.set(Calendar.DAY_OF_MONTH, 1);
-        endCal.set(Calendar.HOUR_OF_DAY, 0);
-        endCal.set(Calendar.MINUTE, 0);
-        endCal.set(Calendar.SECOND, 0);
+        endCal.setTime(startCal.getTime());
+        endCal.add(Calendar.YEAR, 1);
 
         createTable(direction, startCal.getTime(), endCal.getTime(), YEAR);
     }
 
-    public void createTable(String direction, Date startDate, Date endDate, int type) {
+    //创建图表
+    private void createTable(String direction, Date startDate, Date endDate, int type) {
 
+        //查询时间段内明细
         BmobQuery<Detail> startQuery = new BmobQuery<>();
         startQuery.addWhereGreaterThan("createdAt", new BmobDate(startDate));
 
@@ -277,101 +322,96 @@ public class FragmentTable extends Fragment {
             @Override
             public void done(List<Detail> list, BmobException e) {
                 if (e == null) {
-
                     if (list.size() == 0) {
-                        Toast.makeText(getActivity(), "还没有信息呢", Toast.LENGTH_SHORT).show();
-//                        return;
-                    } else {
+                        showToast("还没有信息呢");
+                    }
 
-                        SimpleDateFormat showYMD = new SimpleDateFormat("yyyy-MM-dd");
-                        SimpleDateFormat showMD = new SimpleDateFormat("MM-dd");
+                    @SuppressLint("SimpleDateFormat")
+                    SimpleDateFormat showYmd = new SimpleDateFormat("yyyy-MM-dd");
+                    @SuppressLint("SimpleDateFormat")
+                    SimpleDateFormat showMd = new SimpleDateFormat("MM-dd");
 
-                        table_data.clear();
-                        dateList.clear();
-                        amountList.clear();
+                    //清空数据
+                    tableData.clear();
+                    dateList.clear();
+                    amountList.clear();
 
-                        double sum = 0d;
-                        for (int i = 0; i < list.size(); i++) {
-                            sum += list.get(i).getAmount();
-                            if (i == list.size() - 1) {
-                                table_data.put(list.get(i).getFullDate(), sum);
+                    //同一天内数据综合
+                    double sum = 0d;
+                    for (int i = 0; i < list.size(); i++) {
+                        sum += list.get(i).getAmount();
+                        if (i == list.size() - 1) {
+                            tableData.put(list.get(i).getFullDate(), sum);
+                            sum = 0d;
+                        } else {
+                            if (!list.get(i).getFullDate().equals(list.get(i + 1).getFullDate())) {
+                                tableData.put(list.get(i).getFullDate(), sum);
                                 sum = 0d;
-                            } else {
-                                if (list.get(i).getFullDate().equals(list.get(i + 1).getFullDate())) {
-
-                                } else {
-                                    table_data.put(list.get(i).getFullDate(), sum);
-                                    sum = 0d;
-                                }
-                            }
-                        }
-//                        for (String date : table_data.keySet()) {
-//                            System.out.println(date + " " + table_data.get(date));
-//                        }
-                        Date it_date = startDate;
-                        Calendar cal = Calendar.getInstance();
-                        cal.setTime(it_date);
-                        for (; ; ) {
-
-                            if (table_data.get(showYMD.format(it_date)) == null) {
-                                table_data.put(showYMD.format(it_date), 0d);
-                            }
-                            cal.add(Calendar.DAY_OF_MONTH, 1);
-                            it_date = cal.getTime();
-                            if (it_date.getYear() == endDate.getYear() &&
-                                    it_date.getMonth() == endDate.getMonth() && it_date.getDay() == endDate.getDay()) {
-                                break;
-                            }
-
-                        }
-                        for (String date : table_data.keySet()) {
-                            System.out.println(date + " " + table_data.get(date));
-                        }
-
-
-                        int counter = 0;
-                        int current_month = 0;
-                        double period_sum = 0d;
-                        it_date = startDate;
-                        cal.setTime(it_date);
-                        for (int i = 0; ; i++) {
-
-                            if (type == WEEK) {
-                                dateList.add(new AxisValue(i).setLabel(showMD.format(it_date)));
-                                amountList.add(new PointValue(i, Float.parseFloat(String.valueOf(table_data.get(showYMD.format(it_date))))));
-                            } else if (type == MONTH) {
-                                period_sum += table_data.get(showYMD.format(it_date));
-                                if (i % 5 == 0) {
-                                    dateList.add(new AxisValue(counter).setLabel(showMD.format(it_date)));
-                                    amountList.add(new PointValue(counter, Float.parseFloat(String.valueOf(period_sum))));
-                                    period_sum = 0d;
-                                    counter++;
-                                }
-                            } else if (type == YEAR) {
-                                period_sum += table_data.get(showYMD.format(it_date));
-                                if (it_date.getMonth() != current_month) {
-                                    current_month++;
-                                    dateList.add(new AxisValue(counter).setLabel(showMD.format(it_date)));
-                                    amountList.add(new PointValue(counter, Float.parseFloat(String.valueOf(period_sum))));
-                                    period_sum = 0d;
-                                    counter++;
-                                }
-                            }
-
-                            cal.add(Calendar.DAY_OF_MONTH, 1);
-                            it_date = cal.getTime();
-                            if (it_date.getYear() == endDate.getYear() &&
-                                    it_date.getMonth() == endDate.getMonth() && it_date.getDay() == endDate.getDay()) {
-                                if (type == MONTH && i % 5 != 0) {
-                                    cal.add(Calendar.DAY_OF_MONTH, -1);
-                                    dateList.add(new AxisValue(counter).setLabel(showMD.format(cal.getTime())));
-                                    amountList.add(new PointValue(counter, Float.parseFloat(String.valueOf(period_sum))));
-                                }
-                                break;
                             }
                         }
                     }
 
+                    //填充空白数据
+                    Date itDate = startDate;
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(itDate);
+                    do {
+                        if (tableData.get(showYmd.format(itDate)) == null) {
+                            tableData.put(showYmd.format(itDate), 0d);
+                        }
+                        cal.add(Calendar.DAY_OF_MONTH, 1);
+                        itDate = cal.getTime();
+
+                    } while (itDate.getYear() != endDate.getYear() ||
+                            itDate.getMonth() != endDate.getMonth() || itDate.getDay() != endDate.getDay());
+
+                    //按照 周\月\年 处理数据
+                    int counter = 0;
+                    int currentMonth = 0;
+                    double periodSum = 0d;
+                    itDate = startDate;
+                    cal.setTime(itDate);
+                    for (int i = 0; ; i++) {
+                        if (type == WEEK) {
+                            //一天一个
+                            dateList.add(new AxisValue(i).setLabel(showMd.format(itDate)));
+                            amountList.add(new PointValue(i, Float.parseFloat(String.valueOf(tableData.get(showYmd.format(itDate))))));
+                        } else if (type == MONTH) {
+                            //五天一个
+                            periodSum += tableData.get(showYmd.format(itDate));
+                            if (i % 5 == 0) {
+                                dateList.add(new AxisValue(counter).setLabel(showMd.format(itDate)));
+                                amountList.add(new PointValue(counter, Float.parseFloat(String.valueOf(periodSum))));
+                                periodSum = 0d;
+                                counter++;
+                            }
+                        } else if (type == YEAR) {
+                            //一月一个
+                            periodSum += tableData.get(showYmd.format(itDate));
+                            if (itDate.getMonth() != currentMonth) {
+                                currentMonth++;
+                                dateList.add(new AxisValue(counter).setLabel(showMd.format(itDate)));
+                                amountList.add(new PointValue(counter, Float.parseFloat(String.valueOf(periodSum))));
+                                periodSum = 0d;
+                                counter++;
+                            }
+                        }
+
+                        //将最后的数据加入
+                        cal.add(Calendar.DAY_OF_MONTH, 1);
+                        itDate = cal.getTime();
+                        if (itDate.getYear() == endDate.getYear() &&
+                                itDate.getMonth() == endDate.getMonth() && itDate.getDay() == endDate.getDay()) {
+                            if (type == MONTH && i % 5 != 0) {
+                                cal.add(Calendar.DAY_OF_MONTH, -1);
+                                dateList.add(new AxisValue(counter).setLabel(showMd.format(cal.getTime())));
+                                amountList.add(new PointValue(counter, Float.parseFloat(String.valueOf(periodSum))));
+                            }
+                            break;
+                        }
+                    }
+
+                    //生成折线图
                     Line line = new Line(amountList).setColor(Color.parseColor("#e00032"));
                     List<Line> lines = new ArrayList<>();
                     line.setShape(ValueShape.CIRCLE);
@@ -399,27 +439,32 @@ public class FragmentTable extends Fragment {
                     axisY.setTextSize(8);
                     lineChartData.setAxisYLeft(axisY);
 
-                    table_line_chart.setInteractive(true);
-                    table_line_chart.setZoomType(ZoomType.HORIZONTAL);
-                    table_line_chart.setMaxZoom(3f);
-                    table_line_chart.setLineChartData(lineChartData);
-                    table_line_chart.setVisibility(View.VISIBLE);
+                    tableLineChart.setInteractive(true);
+                    tableLineChart.setZoomType(ZoomType.HORIZONTAL);
+                    tableLineChart.setMaxZoom(3f);
+                    tableLineChart.setLineChartData(lineChartData);
+                    tableLineChart.setVisibility(View.VISIBLE);
 
                     //设置X轴数据的显示个数（x轴0-7个数据）
-                    Viewport v = new Viewport(table_line_chart.getMaximumViewport());
+                    Viewport v = new Viewport(tableLineChart.getMaximumViewport());
                     v.left = 0;
                     v.right = 7;
-                    table_line_chart.setCurrentViewport(v);
+                    tableLineChart.setCurrentViewport(v);
 
                 } else {
-                    Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                    System.out.println(e.getErrorCode() + " " + e.getMessage());
+                    showToast("查询明细失败", e);
                 }
             }
         });
 
     }
 
+    /**
+     * @param today 今天
+     * @return java.util.Date
+     * @Author MACHENIKE
+     * @Description TODO 获取下一个周一
+     **/
     private Date getNextMonday(Date today) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(getThisMonday(today));
@@ -428,6 +473,12 @@ public class FragmentTable extends Fragment {
         return cal.getTime();
     }
 
+    /**
+     * @param today 今天
+     * @return java.util.Date
+     * @Author MACHENIKE
+     * @Description TODO 获取这个周一
+     **/
     private Date getThisMonday(Date today) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(today);

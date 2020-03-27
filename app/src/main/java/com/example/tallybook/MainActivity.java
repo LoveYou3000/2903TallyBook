@@ -21,11 +21,25 @@ import java.util.List;
 
 import cn.bmob.v3.Bmob;
 
+/**
+ * 主页面
+ * @author MACHENIKE
+ */
 public class MainActivity extends AppCompatActivity implements BottomNavigationBar.OnTabSelectedListener, ViewPager.OnPageChangeListener {
 
+    /**
+     * 禁止左右滑动的ViewPager
+     */
     private NoSlideViewPager viewPager;
+
+    /**
+     * 底部导航栏
+     */
     private BottomNavigationBar bottomNavigationBar;
 
+    /**
+     * fragment列表
+     */
     private List<Fragment> fragments;
 
     @Override
@@ -40,6 +54,11 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
         initBottomNav();
     }
 
+    /**
+     * @return void
+     * @Author MACHENIKE
+     * @Description TODO 获取View上的控件
+     **/
     private void initView() {
 
         viewPager = findViewById(R.id.viewPager);
@@ -47,6 +66,11 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
 
     }
 
+    /**
+     * @return void
+     * @Author MACHENIKE
+     * @Description TODO 初始化底部导航栏
+     **/
     private void initBottomNav() {
 
         bottomNavigationBar.setTabSelectedListener(this);
@@ -65,6 +89,11 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
 
     }
 
+    /**
+     * @return void
+     * @Author MACHENIKE
+     * @Description TODO 初始化ViewPager
+     **/
     private void initViewPager() {
 
         fragments = new ArrayList<>();

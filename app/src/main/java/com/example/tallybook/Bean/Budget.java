@@ -2,12 +2,36 @@ package com.example.tallybook.Bean;
 
 import cn.bmob.v3.BmobObject;
 
+/**
+ * 预算实体类
+ * @author MACHENIKE
+ */
 public class Budget extends BmobObject {
+
+    /**
+     * 用户
+     */
     private User user;
+
+    /**
+     * 年
+     */
     private Integer year;
+
+    /**
+     * 月
+     */
     private Integer month;
-    private Double budget_amount;
-    private Double remain_amount;
+
+    /**
+     * 预算金额
+     */
+    private Double budgetAmount;
+
+    /**
+     * 剩余金额
+     */
+    private Double remainAmount;
 
     public User getUser() {
         return user;
@@ -33,19 +57,19 @@ public class Budget extends BmobObject {
         this.month = month;
     }
 
-    public Double getBudget_amount() {
-        return budget_amount;
+    public Double getBudgetAmount() {
+        return budgetAmount;
     }
 
-    public void setBudget_amount(Double budget_amount) {
-        this.budget_amount = budget_amount;
+    public void setBudgetAmount(Double budgetAmount) {
+        this.budgetAmount = budgetAmount;
     }
 
-    public Double getRemain_amount() {
-        return remain_amount;
+    public Double getRemainAmount() {
+        return remainAmount;
     }
 
-    public void setRemain_amount(Double remain_amount) {
-        this.remain_amount = remain_amount;
+    public void setRemainAmount(Double remainAmount) {
+        this.remainAmount = remainAmount;
     }
 }

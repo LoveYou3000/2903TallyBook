@@ -1,5 +1,6 @@
 package com.example.tallybook.fragment;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -28,6 +29,7 @@ import org.angmarch.views.OnSpinnerItemSelectedListener;
 import java.lang.reflect.Field;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
@@ -37,12 +39,31 @@ import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
 
+/**
+ * 记账页面
+ * @author MACHENIKE
+ */
 public class FragmentCharge extends Fragment {
 
+    /**
+     * 当前用户
+     */
     private User user;
 
-    private NiceSpinner charge_nice_spinner;
-    private LinearLayout charge_category_area;
+    /**
+     * 当月预算
+     */
+    private Budget budget;
+
+    /**
+     * 下拉列表控件
+     */
+    private NiceSpinner chargeNiceSpinner;
+
+    /**
+     * 显示分类布局控件
+     */
+    private LinearLayout chargeCategoryArea;
 
     @Nullable
     @Override
@@ -57,157 +78,184 @@ public class FragmentCharge extends Fragment {
         initView();
         setListeners();
 
-        showCategory(getActivity().getResources().getStringArray(R.array.out_category));
+        showCategory(Objects.requireNonNull(getActivity()).getResources().getStringArray(R.array.out_category));
+    }
+
+    /**
+     * @param msg 要显示的信息
+     * @return void
+     * @Author MACHENIKE
+     * @Description TODO 显示Toast信息
+     **/
+    private void showToast(String msg) {
+        Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * @param msg 要显示的信息
+     * @param e   异常信息
+     * @return void
+     * @Author MACHENIKE
+     * @Description TODO 显示Toast信息
+     **/
+    private void showToast(String msg, BmobException e) {
+        Toast.makeText(getActivity(), msg + "\n" + e.getErrorCode() + "\n" + e.getMessage(), Toast.LENGTH_SHORT).show();
     }
 
     private void setListeners() {
 
-        charge_nice_spinner.setOnSpinnerItemSelectedListener(new OnSpinnerItemSelectedListener() {
-            @Override
-            public void onItemSelected(NiceSpinner parent, View view, int position, long id) {
-                if (position == 0)
-                    showCategory(getActivity().getResources().getStringArray(R.array.out_category));
-                else
-                    showCategory(getActivity().getResources().getStringArray(R.array.in_category));
+        chargeNiceSpinner.setOnSpinnerItemSelectedListener((parent, view, position, id) -> {
+            if (position == 0) {
+                showCategory(Objects.requireNonNull(getActivity()).getResources().getStringArray(R.array.out_category));
+            } else {
+                showCategory(Objects.requireNonNull(getActivity()).getResources().getStringArray(R.array.in_category));
             }
         });
 
     }
 
+    /**
+     * @return void
+     * @Author MACHENIKE
+     * @Description TODO 获取控件以及初始化
+     **/
     private void initView() {
 
         user = BmobUser.getCurrentUser(User.class);
 
-        charge_nice_spinner = getActivity().findViewById(R.id.charge_nice_spinner);
-        charge_category_area = getActivity().findViewById(R.id.charge_category_area);
+        chargeNiceSpinner = Objects.requireNonNull(getActivity()).findViewById(R.id.charge_nice_spinner);
+        chargeCategoryArea = getActivity().findViewById(R.id.charge_category_area);
+
+        BmobQuery<Budget> bmobQuery = new BmobQuery<>();
+        bmobQuery.addWhereEqualTo("user",new BmobPointer(user));
+        bmobQuery.addWhereEqualTo("year",new Date().getYear() + 1900);
+        bmobQuery.addWhereEqualTo("month",new Date().getMonth() + 1);
+        bmobQuery.findObjects(new FindListener<Budget>() {
+            @Override
+            public void done(List<Budget> list, BmobException e) {
+                if (e == null) {
+                    budget = list.get(0);
+                } else {
+                    Toast.makeText(getActivity(), "查询当月预算失败" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
     }
 
-    public void showCategory(String[] names) {
-        charge_category_area.removeAllViews();
+    /**
+     * @param names 类别名
+     * @return void
+     * @Author MACHENIKE
+     * @Description TODO 按照名字显示类别
+     **/
+    private void showCategory(String[] names) {
+        chargeCategoryArea.removeAllViews();
+
+        //循环添加
         LinearLayout line = null;
         for (int i = 0; i < names.length; i++) {
 
             LinearLayout block = new LinearLayout(getActivity());
             block.setOrientation(LinearLayout.VERTICAL);
 
+            //每4个为一行
             if  (i % 4 == 0) {
                 if (line != null) {
-                    charge_category_area.addView(line);
+                    chargeCategoryArea.addView(line);
                 }
                 line = new LinearLayout(getActivity());
             }
 
-            ImageView imageView = new ImageView(getActivity());
             try {
+                ImageView imageView = new ImageView(getActivity());
+
                 Field field = R.drawable.class.getDeclaredField(names[i]);
-                imageView.setImageResource(Integer.parseInt(field.get(null).toString()));
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                params.width = (getActivity().getResources().getDisplayMetrics().widthPixels - 160) / 4;
-                params.setMargins(0,20,20,20);
-//                    params.setMargins(40,20,40,20);
-                params.height = params.width;
-                imageView.setLayoutParams(params);
+                imageView.setImageResource(Integer.parseInt(Objects.requireNonNull(field.get(null)).toString()));
+
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                layoutParams.width = (Objects.requireNonNull(getActivity()).getResources().getDisplayMetrics().widthPixels - 160) / 4;
+                layoutParams.height = (Objects.requireNonNull(getActivity()).getResources().getDisplayMetrics().widthPixels - 160) / 4;
+                layoutParams.setMargins(0,20,20,20);
+
+                imageView.setLayoutParams(layoutParams);
 
                 TextView textView = new TextView(getActivity());
-                Field field_cn = R.string.class.getDeclaredField(names[i]);
-                textView.setText(getActivity().getResources().getString(Integer.parseInt(field_cn.get(null).toString())));
+
+                Field fieldCn = R.string.class.getDeclaredField(names[i]);
+                textView.setText(getActivity().getResources().getString(Integer.parseInt(Objects.requireNonNull(fieldCn.get(null)).toString())));
                 textView.setGravity(Gravity.CENTER);
 
+                //图片与文字加在一起
                 block.addView(imageView);
                 block.addView(textView);
 
-                block.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Toast.makeText(getActivity(), String.valueOf(textView.getText().toString()), Toast.LENGTH_SHORT).show();
+                //某一个图片或文字点击事件
+                block.setOnClickListener(v -> {
+                    AlertDialog.Builder inputNum = new AlertDialog.Builder(getActivity());
+                    @SuppressLint("InflateParams")
+                    View inputView = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_input_amount,null);
 
-                        final AlertDialog.Builder input_num = new AlertDialog.Builder(getActivity());
-                        View input_view = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_input_amount,null);
+                    inputNum.setView(inputView).create();
+                    AlertDialog show = inputNum.show();
 
-                        input_num.setView(input_view).create();
-                        AlertDialog show = input_num.show();
+                    EditText inputDetailAmount = inputView.findViewById(R.id.input_detail_amount);
+                    Button inputCancel = inputView.findViewById(R.id.input_cancel);
+                    Button inputConfirm = inputView.findViewById(R.id.input_confirm);
 
-                        EditText input_detail_amount = input_view.findViewById(R.id.input_detail_amount);
-                        Button input_cancel = input_view.findViewById(R.id.input_cancel);
-                        Button input_confirm = input_view.findViewById(R.id.input_confirm);
+                    //取消
+                    inputCancel.setOnClickListener(v1 -> show.dismiss());
 
-                        input_cancel.setOnClickListener(new View.OnClickListener() {
+                    //确认
+                    inputConfirm.setOnClickListener(v2 -> {
+                        Detail detail = new Detail();
+                        detail.setUser(user);
+                        detail.setDirection(chargeNiceSpinner.getText().toString());
+                        detail.setCategory(textView.getText().toString());
+                        detail.setAmount(Double.parseDouble(inputDetailAmount.getText().toString()));
+
+                        detail.save(new SaveListener<String>() {
                             @Override
-                            public void onClick(View v) {
-                                show.dismiss();
-                            }
-                        });
+                            public void done(String s, BmobException e) {
+                                if (e == null) {
+                                    showToast("记录成功");
 
-                        input_confirm.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Detail detail = new Detail();
-                                detail.setUser(user);
-                                detail.setDirection(charge_nice_spinner.getText().toString());
-                                detail.setCategory(textView.getText().toString());
-                                detail.setAmount(Double.parseDouble(input_detail_amount.getText().toString()));
-
-                                detail.save(new SaveListener<String>() {
-                                    @Override
-                                    public void done(String s, BmobException e) {
-                                        if (e == null) {
-                                            Toast.makeText(getActivity(), "记帐成功", Toast.LENGTH_SHORT).show();
-
-                                            BmobQuery<Budget> bmobQuery = new BmobQuery<>();
-                                            bmobQuery.addWhereEqualTo("user",new BmobPointer(user));
-                                            bmobQuery.addWhereEqualTo("year",new Date().getYear() + 1900);
-                                            bmobQuery.addWhereEqualTo("month",new Date().getMonth() + 1);
-                                            bmobQuery.findObjects(new FindListener<Budget>() {
-                                                @Override
-                                                public void done(List<Budget> list, BmobException e) {
-                                                    if (e == null) {
-                                                        Budget budget = list.get(0);
-
-                                                        if (charge_nice_spinner.getText().toString().equals("收入")) {
-                                                            budget.setRemain_amount(budget.getRemain_amount() +
-                                                                    Double.parseDouble(input_detail_amount.getText().toString()));
-                                                        } else {
-                                                            budget.setRemain_amount(budget.getRemain_amount() -
-                                                                    Double.parseDouble(input_detail_amount.getText().toString()));
-                                                        }
-
-                                                        budget.update(new UpdateListener() {
-                                                            @Override
-                                                            public void done(BmobException e) {
-                                                                if (e == null) {
-                                                                    Toast.makeText(getActivity(), "更新预算成功", Toast.LENGTH_SHORT).show();
-                                                                } else {
-                                                                    Toast.makeText(getActivity(), "更新预算失败" + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                                                }
-                                                            }
-                                                        });
-                                                    } else {
-                                                        Toast.makeText(getActivity(), "记录预算失败" + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                                    }
-                                                }
-                                            });
-                                        } else {
-                                            Toast.makeText(getActivity(), "记帐失败", Toast.LENGTH_SHORT).show();
-                                        }
+                                    //更新预算信息
+                                    if ("收入".equals(chargeNiceSpinner.getText().toString())) {
+                                        budget.setRemainAmount(budget.getRemainAmount() +
+                                                Double.parseDouble(inputDetailAmount.getText().toString()));
+                                    } else {
+                                        budget.setRemainAmount(budget.getRemainAmount() -
+                                                Double.parseDouble(inputDetailAmount.getText().toString()));
                                     }
-                                });
 
-                                show.dismiss();
+                                    budget.update(new UpdateListener() {
+                                        @Override
+                                        public void done(BmobException e) {
+                                            if (e == null) {
+                                                showToast("更新预算成功");
+                                            } else {
+                                                showToast("更新预算失败", e);
+                                            }
+                                        }
+                                    });
+                                } else {
+                                    showToast("记录失败", e);
+                                }
                             }
                         });
 
-                    }
+                        show.dismiss();
+                    });
+
                 });
 
                 line.addView(block);
-            } catch (NoSuchFieldException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
+            } catch (NoSuchFieldException | IllegalAccessException e) {
                 e.printStackTrace();
             }
         }
-        charge_category_area.addView(line);
+        chargeCategoryArea.addView(line);
     }
 
 }

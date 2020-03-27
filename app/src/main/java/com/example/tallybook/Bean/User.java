@@ -2,9 +2,21 @@ package com.example.tallybook.Bean;
 
 import cn.bmob.v3.BmobUser;
 
+/**
+ * 用户实体类
+ * @author MACHENIKE
+ */
 public class User extends BmobUser {
+
+    /**
+     * 性别
+     */
     private String sex;
-    private Integer portraitID;
+
+    /**
+     * 头像ID
+     */
+    private Integer portraitId;
 
     public String getSex() {
         return sex;
@@ -14,11 +26,11 @@ public class User extends BmobUser {
         this.sex = sex;
     }
 
-    public Integer getPortraitID() {
-        return portraitID;
+    public Integer getPortraitId() {
+        return portraitId;
     }
 
-    public void setPortraitID(Integer portraitID) {
-        this.portraitID = portraitID;
+    public void setPortraitId(Integer portraitId) {
+        this.portraitId = portraitId;
     }
 }

@@ -1,16 +1,12 @@
 package com.example.tallybook.fragment;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,40 +20,75 @@ import com.example.tallybook.Bean.Detail;
 import com.example.tallybook.Bean.Saving;
 import com.example.tallybook.Bean.User;
 import com.example.tallybook.R;
-import com.example.tallybook.activity.Login;
 import com.example.tallybook.activity.PersonalInfo;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
-import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobPointer;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.CountListener;
 import cn.bmob.v3.listener.FindListener;
-import cn.bmob.v3.listener.UpdateListener;
 
+/**
+ * 我的页面
+ *
+ * @author MACHENIKE
+ */
 public class FragmentMine extends Fragment {
 
+    /**
+     * 当前用户
+     */
     private User user;
 
-    private SwipeRefreshLayout mine_swipe;
+    /**
+     * 向下滑动刷新控件
+     */
+    private SwipeRefreshLayout mineSwipe;
 
-    private ImageView mine_head;
-    private TextView mine_name;
-    private TextView mine_count_day;
-    private TextView mine_count_detail;
+    /**
+     * 头像
+     */
+    private ImageView mineHead;
 
+    /**
+     * 用户名
+     */
+    private TextView mineName;
 
-    private TextView mine_budget_amount;
-    private TextView mine_remain_amount;
+    /**
+     * 记账天数
+     */
+    private TextView mineCountDay;
 
-    private TextView mine_saving_complete;
-    private TextView mine_saving_need;
+    /**
+     * 记账笔数
+     */
+    private TextView mineCountDetail;
 
+    /**
+     * 本月预算金额
+     */
+    private TextView mineBudgetAmount;
+
+    /**
+     * 本月剩余金额
+     */
+    private TextView mineRemainAmount;
+
+    /**
+     * 存钱计划完成次数
+     */
+    private TextView mineSavingComplete;
+
+    /**
+     * 存钱计划剩余金额
+     */
+    private TextView mineSavingNeed;
 
     @Nullable
     @Override
@@ -69,38 +100,62 @@ public class FragmentMine extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-//        Bmob.initialize(getActivity(), "4c0d8bc51d99076175282cb6010f0f85");
-
         initView();
         setListeners();
 
-        ShowData();
+        showData();
 
     }
 
-    private void ShowData() {
+    /**
+     * @param msg 要显示的信息
+     * @return void
+     * @Author MACHENIKE
+     * @Description TODO 显示Toast信息
+     **/
+    private void showToast(String msg) {
+        Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+    }
 
-        mine_name.setText(user.getUsername());
+    /**
+     * @param msg 要显示的信息
+     * @param e   异常信息
+     * @return void
+     * @Author MACHENIKE
+     * @Description TODO 显示Toast信息
+     **/
+    private void showToast(String msg, BmobException e) {
+        Toast.makeText(getActivity(), msg + "\n" + e.getErrorCode() + "\n" + e.getMessage(), Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * @return void
+     * @Author MACHENIKE
+     * @Description TODO 将数据展示到页面上
+     **/
+    private void showData() {
+
+        mineName.setText(user.getUsername());
 
         BmobQuery<Detail> bmobQuery = new BmobQuery<>();
         bmobQuery.addWhereEqualTo("user", new BmobPointer(user));
         bmobQuery.findObjects(new FindListener<Detail>() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void done(List<Detail> list, BmobException e) {
                 if (e == null) {
-                    int day_num = 1;
+                    //获取记账天数以及笔数
+                    int dayNum = 1;
                     for (int i = 1; i < list.size(); i++) {
-                        if (list.get(i).getFullDate().equals(list.get(i - 1).getFullDate())) {
-                            continue;
-                        } else {
-                            day_num++;
+                        if (!list.get(i).getFullDate().equals(list.get(i - 1).getFullDate())) {
+                            dayNum++;
                         }
                     }
 
-                    mine_count_day.setText("已记账 " + day_num + " 天");
-                    mine_count_detail.setText("已记账 " + list.size() + " 笔");
+                    mineCountDay.setText("已记账 " + dayNum + " 天");
+                    mineCountDetail.setText("已记账 " + list.size() + " 笔");
                 } else {
-                    Toast.makeText(getActivity(), "查询失败", Toast.LENGTH_SHORT).show();
+                    showToast("mine查询记账天数以及笔数失败", e);
                 }
             }
         });
@@ -110,77 +165,94 @@ public class FragmentMine extends Fragment {
         budgetBmobQuery.addWhereEqualTo("year", new Date().getYear() + 1900);
         budgetBmobQuery.addWhereEqualTo("month", new Date().getMonth() + 1);
         budgetBmobQuery.findObjects(new FindListener<Budget>() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void done(List<Budget> list, BmobException e) {
                 if (e == null) {
+                    //获取预算
                     Budget budget = list.get(0);
 
-                    mine_budget_amount.setText(budget.getBudget_amount() + "元");
-                    mine_remain_amount.setText(budget.getRemain_amount() + "元");
+                    mineBudgetAmount.setText(budget.getBudgetAmount() + "元");
+                    mineRemainAmount.setText(budget.getRemainAmount() + "元");
                 } else {
-                    Toast.makeText(getActivity(), "查询失败", Toast.LENGTH_SHORT).show();
+                    showToast("mine查询预算信息失败", e);
                 }
             }
         });
 
-        BmobQuery<Saving> saving_complete_timeBmobQuery = new BmobQuery<>();
-        saving_complete_timeBmobQuery.addWhereEqualTo("user", new BmobPointer(user));
-        saving_complete_timeBmobQuery.addWhereEqualTo("saving_status", true);
-        saving_complete_timeBmobQuery.count(Saving.class, new CountListener() {
+        BmobQuery<Saving> savingCompleteTimeBmobQuery = new BmobQuery<>();
+        savingCompleteTimeBmobQuery.addWhereEqualTo("user", new BmobPointer(user));
+        savingCompleteTimeBmobQuery.addWhereEqualTo("savingStatus", true);
+        savingCompleteTimeBmobQuery.count(Saving.class, new CountListener() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void done(Integer integer, BmobException e) {
                 if (e == null) {
-                    mine_saving_complete.setText(integer + "次");
+                    //获取存钱完成次数
+                    mineSavingComplete.setText(integer + "次");
                 } else {
-                    Toast.makeText(getActivity(), "查询失败", Toast.LENGTH_SHORT).show();
+                    showToast("mine查询存钱完成次数失败", e);
                 }
             }
         });
 
-        BmobQuery<Saving> saving_needBmonQuery = new BmobQuery<>();
-        saving_needBmonQuery.addWhereEqualTo("user", new BmobPointer(user));
-        saving_needBmonQuery.addWhereEqualTo("saving_status", false);
-        saving_needBmonQuery.findObjects(new FindListener<Saving>() {
+        BmobQuery<Saving> savingNeedBmonQuery = new BmobQuery<>();
+        savingNeedBmonQuery.addWhereEqualTo("user", new BmobPointer(user));
+        savingNeedBmonQuery.addWhereEqualTo("savingStatus", false);
+        savingNeedBmonQuery.findObjects(new FindListener<Saving>() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void done(List<Saving> list, BmobException e) {
                 if (e == null) {
-                    mine_saving_need.setText(list.get(0).getSaving_amount() - list.get(0).getSaving_already() + "元");
+                    //获取剩余存钱金额
+                    mineSavingNeed.setText(list.get(0).getSavingAmount() - list.get(0).getSavingAlready() + "元");
                 } else {
-                    Toast.makeText(getActivity(), "查询失败", Toast.LENGTH_SHORT).show();
+                    showToast("mine查询剩余存钱金额失败", e);
                 }
             }
         });
 
     }
 
+    /**
+     * @return void
+     * @Author MACHENIKE
+     * @Description TODO 各个控件设置监听器
+     **/
     private void setListeners() {
 
-        mine_head.setOnClickListener(v -> {
+        //头像点击  ->  跳转到个人信息页面
+        mineHead.setOnClickListener(v -> {
             startActivity(new Intent(getActivity(), PersonalInfo.class));
-            mine_name.setText(BmobUser.getCurrentUser(User.class).getUsername());
         });
 
-        mine_swipe.setOnRefreshListener(() -> {
-            mine_swipe.setRefreshing(false);
-            ShowData();
+        //下拉刷新
+        mineSwipe.setOnRefreshListener(() -> {
+            mineSwipe.setRefreshing(false);
+            showData();
         });
 
     }
 
+    /**
+     * @return void
+     * @Author MACHENIKE
+     * @Description TODO 获取控件并初始化
+     **/
     private void initView() {
         user = BmobUser.getCurrentUser(User.class);
 
-        mine_swipe = Objects.requireNonNull(getActivity()).findViewById(R.id.mine_swipe);
+        mineSwipe = Objects.requireNonNull(getActivity()).findViewById(R.id.mine_swipe);
 
-        mine_head = getActivity().findViewById(R.id.mine_head);
-        mine_name = getActivity().findViewById(R.id.mine_name);
-        mine_count_day = getActivity().findViewById(R.id.mine_count_day);
-        mine_count_detail = getActivity().findViewById(R.id.mine_count_detail);
+        mineHead = getActivity().findViewById(R.id.mine_head);
+        mineName = getActivity().findViewById(R.id.mine_name);
+        mineCountDay = getActivity().findViewById(R.id.mine_count_day);
+        mineCountDetail = getActivity().findViewById(R.id.mine_count_detail);
 
-        mine_budget_amount = getActivity().findViewById(R.id.mine_budget_amount);
-        mine_remain_amount = getActivity().findViewById(R.id.mine_remain_amount);
+        mineBudgetAmount = getActivity().findViewById(R.id.mine_budget_amount);
+        mineRemainAmount = getActivity().findViewById(R.id.mine_remain_amount);
 
-        mine_saving_complete = getActivity().findViewById(R.id.mine_saving_complete);
-        mine_saving_need = getActivity().findViewById(R.id.mine_saving_need);
+        mineSavingComplete = getActivity().findViewById(R.id.mine_saving_complete);
+        mineSavingNeed = getActivity().findViewById(R.id.mine_saving_need);
     }
 }

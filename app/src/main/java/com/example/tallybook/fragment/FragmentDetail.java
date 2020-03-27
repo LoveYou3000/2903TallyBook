@@ -1,13 +1,12 @@
 package com.example.tallybook.fragment;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,46 +23,80 @@ import com.example.tallybook.R;
 import com.example.tallybook.adapter.DetailAdapter;
 import com.example.tallybook.common.DateTimeDialog;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
-import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobDate;
 import cn.bmob.v3.datatype.BmobPointer;
-import cn.bmob.v3.datatype.BmobQueryResult;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
-import cn.bmob.v3.listener.SQLQueryListener;
 
 public class FragmentDetail extends Fragment implements DateTimeDialog.MyOnDateSetListener {
 
+    /**
+     * 当前用户
+     */
     private User user;
 
-    //AppBar上的控件
-    private ImageView link_mine;
-    private Button selectYM;
+    /**
+     * 用户头像
+     */
+    private ImageView linkMine;
+
+    /**
+     * 选择年月按钮
+     */
+    private Button selectYm;
+
+    /**
+     * 月收入
+     */
     private TextView income;
+
+    /**
+     * 月支出
+     */
     private TextView outcome;
 
+    /**
+     * 年月选择器
+     */
     private DateTimeDialog dateTimeDialog;
 
+    /**
+     * 年
+     */
     private int year;
+
+    /**
+     * 月
+     */
     private int month;
 
-    //主体View的控件
+    /**
+     * 显示明细的控件
+     */
     private RecyclerView recyclerView;
+
+    /**
+     * 下拉刷新控件
+     */
     private SwipeRefreshLayout swipeRefreshLayout;
 
-    //数据
+    /**
+     * 数据
+     */
     private List<Detail> data;
 
-    //适配器
+    /**
+     * 适配器
+     */
     private DetailAdapter detailAdapter;
 
     @Nullable
@@ -76,15 +109,57 @@ public class FragmentDetail extends Fragment implements DateTimeDialog.MyOnDateS
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-//        Bmob.initialize(getActivity(), "4c0d8bc51d99076175282cb6010f0f85");
-
         initAppBar();
         initView();
 
+        setListeners();
     }
 
-    private void Refresh() {
+    /**
+     * @param msg 要显示的信息
+     * @return void
+     * @Author MACHENIKE
+     * @Description TODO 显示Toast信息
+     **/
+    private void showToast(String msg) {
+        Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+    }
 
+    /**
+     * @param msg 要显示的信息
+     * @param e   异常信息
+     * @return void
+     * @Author MACHENIKE
+     * @Description TODO 显示Toast信息
+     **/
+    private void showToast(String msg, BmobException e) {
+        Toast.makeText(getActivity(), msg + "\n" + e.getErrorCode() + "\n" + e.getMessage(), Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * @return void
+     * @Author MACHENIKE
+     * @Description TODO 设置控件的监听器
+     **/
+    private void setListeners() {
+
+        selectYm.setOnClickListener(v -> dateTimeDialog.hideOrShow());
+
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            swipeRefreshLayout.setRefreshing(false);
+            refresh();
+        });
+
+    }
+
+    /**
+     * @return void
+     * @Author MACHENIKE
+     * @Description TODO 刷新主体View
+     **/
+    private void refresh() {
+
+        //获取月收入与月支出
         Calendar startCal = Calendar.getInstance();
         startCal.set(Calendar.YEAR, year);
         startCal.set(Calendar.MONTH, month - 1);
@@ -94,12 +169,8 @@ public class FragmentDetail extends Fragment implements DateTimeDialog.MyOnDateS
         startCal.set(Calendar.SECOND, 0);
 
         Calendar endCal = Calendar.getInstance();
-        endCal.set(Calendar.YEAR, year);
-        endCal.set(Calendar.MONTH, month);
-        endCal.set(Calendar.DAY_OF_MONTH, 1);
-        endCal.set(Calendar.HOUR_OF_DAY, 0);
-        endCal.set(Calendar.MINUTE, 0);
-        endCal.set(Calendar.SECOND, 0);
+        endCal.setTime(startCal.getTime());
+        endCal.add(Calendar.MONTH, 1);
 
         BmobQuery<Detail> startBmobQuery = new BmobQuery<>();
         startBmobQuery.addWhereGreaterThanOrEqualTo("createdAt", new BmobDate(startCal.getTime()));
@@ -113,12 +184,13 @@ public class FragmentDetail extends Fragment implements DateTimeDialog.MyOnDateS
 
         BmobQuery<Detail> detailBmobQuery = new BmobQuery<>();
         detailBmobQuery.addWhereEqualTo("user", new BmobPointer(user));
-        detailBmobQuery.order("createdAt");
+        detailBmobQuery.order("-createdAt");
         detailBmobQuery.and(bmobQueries);
         detailBmobQuery.findObjects(new FindListener<Detail>() {
             @Override
             public void done(List<Detail> list, BmobException e) {
                 if (e == null) {
+                    //设置适配器
                     data = list;
                     detailAdapter = new DetailAdapter(getActivity(), data);
                     recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -126,62 +198,63 @@ public class FragmentDetail extends Fragment implements DateTimeDialog.MyOnDateS
 
                     showMonthDetail(list);
                 } else {
-                    Toast.makeText(getActivity(), "查询明细失败_detail", Toast.LENGTH_SHORT).show();
+                    showToast("查询明细失败_detail", e);
                 }
             }
         });
 
     }
 
+    /**
+     * @return void
+     * @Author MACHENIKE
+     * @Description TODO 显示月收入与月支出
+     **/
+    @SuppressLint("SetTextI18n")
     private void showMonthDetail(List<Detail> list) {
 
-        double sum_in = 0f;
-        double sum_out = 0f;
+        double sumIn = 0f;
+        double sumOut = 0f;
 
         for (Detail detail : list) {
-            if (detail.getDirection().equals("收入")) {
-                sum_in += detail.getAmount();
+            if ("收入".equals(detail.getDirection())) {
+                sumIn += detail.getAmount();
             } else {
-                sum_out += detail.getAmount();
+                sumOut += detail.getAmount();
             }
         }
 
-        income.setText("收入:" + sum_in + "元");
-        outcome.setText("支出:" + sum_out + "元");
+        income.setText("收入:" + sumIn + "元");
+        outcome.setText("支出:" + sumOut + "元");
 
     }
 
+    /**
+     * @return void
+     * @Author MACHENIKE
+     * @Description TODO 获取View上的控件
+     **/
     private void initView() {
-        recyclerView = getActivity().findViewById(R.id.detailDay_recyclerView);
+        recyclerView = Objects.requireNonNull(getActivity()).findViewById(R.id.detailDay_recyclerView);
         swipeRefreshLayout = getActivity().findViewById(R.id.swipe);
 
         swipeRefreshLayout.setColorSchemeResources(R.color.md_green_400, R.color.md_red_400, R.color.md_blue_400);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                swipeRefreshLayout.setRefreshing(false);
-                Refresh();
-            }
-        });
     }
 
+    /**
+     * @return void
+     * @Author MACHENIKE
+     * @Description TODO 获取AppBar上的控件以及初始化
+     **/
     private void initAppBar() {
         user = BmobUser.getCurrentUser(User.class);
 
-        //获取AppBar上的控件
-        link_mine = getActivity().findViewById(R.id.link_mine);
-        selectYM = getActivity().findViewById(R.id.selectYM);
+        linkMine = Objects.requireNonNull(getActivity()).findViewById(R.id.link_mine);
+        selectYm = getActivity().findViewById(R.id.selectYM);
         income = getActivity().findViewById(R.id.income);
         outcome = getActivity().findViewById(R.id.outcome);
-        //选择年月的Dialog
-        dateTimeDialog = new DateTimeDialog(getActivity(), this);
 
-        selectYM.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dateTimeDialog.hideOrShow();
-            }
-        });
+        dateTimeDialog = new DateTimeDialog(getActivity(), this);
 
         //按当时时间初始化
         onDateSet(new Date());
@@ -190,15 +263,17 @@ public class FragmentDetail extends Fragment implements DateTimeDialog.MyOnDateS
     @Override
     public void onDateSet(Date date) {
         //在按钮上设置日期
+        @SuppressLint("SimpleDateFormat")
         SimpleDateFormat mFormatter = new SimpleDateFormat("yyyy年 MM月");
         String str = mFormatter.format(date);
-        selectYM.setText(str);
+        selectYm.setText(str);
+
         //获取年月
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
         year = cal.get(Calendar.YEAR);
         month = cal.get(Calendar.MONTH) + 1;
 
-        Refresh();
+        refresh();
     }
 }

@@ -2,20 +2,37 @@ package com.example.tallybook.Bean;
 
 import cn.bmob.v3.BmobObject;
 
+/**
+ * 存钱计划实体类
+ *
+ * @author MACHENIKE
+ */
 public class Saving extends BmobObject {
-    private String saving_purpose;
+
+    /**
+     * 用户
+     */
     private User user;
-    private Double saving_amount;
-    private boolean saving_status;
-    private Double saving_already;
 
-    public String getSaving_purpose() {
-        return saving_purpose;
-    }
+    /**
+     * 存钱目标
+     */
+    private String savingPurpose;
 
-    public void setSaving_purpose(String saving_purpose) {
-        this.saving_purpose = saving_purpose;
-    }
+    /**
+     * 金额
+     */
+    private Double savingAmount;
+
+    /**
+     * 是否完成
+     */
+    private boolean savingStatus;
+
+    /**
+     * 已存款
+     */
+    private Double savingAlready;
 
     public User getUser() {
         return user;
@@ -25,27 +42,35 @@ public class Saving extends BmobObject {
         this.user = user;
     }
 
-    public Double getSaving_amount() {
-        return saving_amount;
+    public String getSavingPurpose() {
+        return savingPurpose;
     }
 
-    public void setSaving_amount(Double saving_amount) {
-        this.saving_amount = saving_amount;
+    public void setSavingPurpose(String savingPurpose) {
+        this.savingPurpose = savingPurpose;
     }
 
-    public boolean isSaving_status() {
-        return saving_status;
+    public Double getSavingAmount() {
+        return savingAmount;
     }
 
-    public void setSaving_status(boolean saving_status) {
-        this.saving_status = saving_status;
+    public void setSavingAmount(Double savingAmount) {
+        this.savingAmount = savingAmount;
     }
 
-    public Double getSaving_already() {
-        return saving_already;
+    public boolean isSavingStatus() {
+        return savingStatus;
     }
 
-    public void setSaving_already(Double saving_already) {
-        this.saving_already = saving_already;
+    public void setSavingStatus(boolean savingStatus) {
+        this.savingStatus = savingStatus;
+    }
+
+    public Double getSavingAlready() {
+        return savingAlready;
+    }
+
+    public void setSavingAlready(Double savingAlready) {
+        this.savingAlready = savingAlready;
     }
 }

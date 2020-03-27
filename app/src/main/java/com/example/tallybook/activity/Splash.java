@@ -2,12 +2,10 @@ package com.example.tallybook.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.tallybook.Bean.User;
 import com.example.tallybook.MainActivity;
 import com.example.tallybook.R;
 
@@ -17,6 +15,10 @@ import java.util.TimerTask;
 import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobUser;
 
+/**
+ * 开始闪屏
+ * @author MACHENIKE
+ */
 public class Splash extends AppCompatActivity {
 
     @Override
@@ -26,9 +28,7 @@ public class Splash extends AppCompatActivity {
 
         Bmob.initialize(this,"4c0d8bc51d99076175282cb6010f0f85");
 
-
-        Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
+        new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
                 if (BmobUser.isLogin()) {

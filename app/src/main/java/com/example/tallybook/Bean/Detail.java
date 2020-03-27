@@ -1,15 +1,37 @@
 package com.example.tallybook.Bean;
 
+import android.annotation.SuppressLint;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import cn.bmob.v3.BmobObject;
 
+/**
+ * 明细实体类
+ * @author MACHENIKE
+ */
 public class Detail extends BmobObject {
-    private Double amount;
+
+    /**
+     * 用户
+     */
     private User user;
+
+    /**
+     * 金额
+     */
+    private Double amount;
+
+    /**
+     * 去向
+     */
     private String direction;
+
+    /**
+     * 类别
+     */
     private String category;
 
     public Double getAmount() {
@@ -45,6 +67,7 @@ public class Detail extends BmobObject {
     }
 
     public String getFullDate() {
+        @SuppressLint("SimpleDateFormat")
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String fullDateStr = getCreatedAt();
         Date fullDate = null;
@@ -53,6 +76,7 @@ public class Detail extends BmobObject {
         } catch (ParseException e) {
             e.printStackTrace();
         }
+        assert fullDate != null;
         return sdf.format(fullDate);
     }
 }

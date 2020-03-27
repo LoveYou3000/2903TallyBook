@@ -9,6 +9,9 @@ import java.util.List;
 
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
+    /**
+     * fragment列表
+     */
     private List<Fragment> fragments;
 
     public SectionsPagerAdapter(FragmentManager fragmentManager, List<Fragment> fragments) {
@@ -16,12 +19,23 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
         this.fragments = fragments;
     }
 
+    /**
+     * @Author MACHENIKE
+     * @Description TODO 返回某一个fragment
+     * @param position 当前位置
+     * @return androidx.fragment.app.Fragment
+     **/
     @NonNull
     @Override
     public Fragment getItem(int position) {
         return fragments.get(position);
     }
 
+    /**
+     * @Author MACHENIKE
+     * @Description TODO 获取fragment列表的长度
+     * @return int
+     **/
     @Override
     public int getCount() {
         return fragments.size();
