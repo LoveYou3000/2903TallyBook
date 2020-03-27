@@ -418,17 +418,6 @@ public class FragmentBudget extends Fragment {
                         budget = list.get(0);
                     }
 
-//                    //显示预算信息
-//                    double budgetAmountNum = budget.getBudgetAmount();
-//                    double remainAmountNum = budget.getRemainAmount();
-//
-//                    budgetAmount.setText(budgetAmountNum + "元");
-//                    remainAmount.setText(remainAmountNum + "元");
-//
-//                    float remainPercent = (float) (remainAmountNum / budgetAmountNum) * 100;
-//
-//                    circleBar.setPercentData(remainPercent, new DecelerateInterpolator());
-
                     showData();
 
                 } else {

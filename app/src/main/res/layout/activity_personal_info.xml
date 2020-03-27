@@ -6,13 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-<!--    <com.google.android.material.appbar.AppBarLayout-->
-<!--        android:fitsSystemWindows="true"-->
-<!--        android:background="@color/md_yellow_600"-->
-<!--        android:orientation="horizontal"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content" >-->
-
     <com.google.android.material.appbar.AppBarLayout
         android:background="@color/md_yellow_600"
         android:fitsSystemWindows="true"
@@ -22,20 +15,22 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            tools:ignore="UseCompoundDrawables">
 
             <ImageView
                 android:id="@+id/personal_back"
                 android:layout_margin="10sp"
                 android:src="@drawable/back"
                 android:layout_width="30dp"
-                android:layout_height="30dp" />
+                android:layout_height="30dp"
+                android:contentDescription="@string/personal_back" />
 
             <TextView
                 android:layout_marginEnd="50sp"
                 android:gravity="center"
                 android:textSize="20sp"
-                android:text="个人信息"
+                android:text="@string/personal_info"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
@@ -59,13 +54,14 @@
             android:id="@+id/personal_head"
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            tools:ignore="RtlSymmetry">
 
             <TextView
                 android:gravity="center_vertical"
                 android:textColor="#000"
                 android:textSize="20sp"
-                android:text="头像"
+                android:text="@string/head_img"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
@@ -75,14 +71,16 @@
                 android:layout_gravity="end"
                 android:src="@drawable/change_head"
                 android:layout_width="30sp"
-                android:layout_height="30sp" />
+                android:layout_height="30sp"
+                android:contentDescription="@string/head_img" />
 
             <ImageView
                 android:layout_marginStart="5dp"
                 android:layout_gravity="center_vertical"
                 android:src="@drawable/right"
                 android:layout_width="15dp"
-                android:layout_height="15dp" />
+                android:layout_height="15dp"
+                android:contentDescription="@string/right_arrow" />
 
         </LinearLayout>
 
@@ -103,12 +101,13 @@
             android:id="@+id/personal_username"
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="50sp" >
+            android:layout_height="50sp"
+            tools:ignore="RtlSymmetry">
 
             <TextView
                 android:textColor="#000"
                 android:textSize="20sp"
-                android:text="用户名"
+                android:text="@string/username_ch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
@@ -116,7 +115,6 @@
                 android:id="@+id/personal_username_show"
                 android:layout_marginTop="2.5dp"
                 android:layout_marginLeft="100sp"
-                android:text="用户名"
                 android:textSize="15sp"
                 android:gravity="right|center_vertical"
                 android:layout_gravity="center_vertical"
@@ -130,7 +128,8 @@
                 android:layout_gravity="center_vertical"
                 android:src="@drawable/right"
                 android:layout_width="15dp"
-                android:layout_height="15dp" />
+                android:layout_height="15dp"
+                android:contentDescription="@string/right_arrow" />
 
         </LinearLayout>
 
@@ -149,34 +148,36 @@
             android:id="@+id/personal_sex"
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="50sp" >
+            android:layout_height="50sp"
+            tools:ignore="RtlSymmetry">
 
             <TextView
                 android:layout_gravity="center_vertical"
                 android:textColor="#000"
                 android:textSize="20sp"
-                android:text="性别"
+                android:text="@string/sex"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
             <TextView
                 android:id="@+id/personal_sex_show"
                 android:layout_marginTop="2.5dp"
-                android:layout_marginLeft="120sp"
-                android:text="无"
-                android:textSize="15dp"
+                android:layout_marginStart="120sp"
+                android:textSize="15sp"
                 android:gravity="right|center_vertical"
                 android:layout_gravity="center_vertical"
                 android:layout_width="200sp"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                tools:ignore="RtlHardcoded" />
 
             <ImageView
                 android:layout_marginTop="2.5dp"
-                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
                 android:layout_gravity="center_vertical"
                 android:src="@drawable/right"
                 android:layout_width="15dp"
-                android:layout_height="15dp" />
+                android:layout_height="15dp"
+                android:contentDescription="@string/right_arrow" />
 
         </LinearLayout>
 
@@ -188,13 +189,14 @@
             android:id="@+id/personal_password"
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="50sp" >
+            android:layout_height="50sp"
+            tools:ignore="RtlSymmetry">
 
             <TextView
                 android:layout_gravity="center_vertical"
                 android:textColor="#000"
                 android:textSize="20sp"
-                android:text="密码"
+                android:text="@string/password_ch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
@@ -205,7 +207,8 @@
                 android:layout_gravity="center_vertical"
                 android:src="@drawable/right"
                 android:layout_width="15dp"
-                android:layout_height="15dp" />
+                android:layout_height="15dp"
+                android:contentDescription="@string/right_arrow" />
 
         </LinearLayout>
 
@@ -225,7 +228,7 @@
                 android:gravity="center"
                 android:paddingTop="14dp"
                 android:paddingBottom="14dp"
-                android:text="Logout"
+                android:text="@string/logout"
                 android:textColor="#ffffff"
                 android:textSize="14sp" />
 

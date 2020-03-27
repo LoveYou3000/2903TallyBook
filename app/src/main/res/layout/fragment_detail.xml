@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -22,10 +23,11 @@
             <ImageView
                 android:id="@+id/link_mine"
                 android:src="@drawable/link_mine"
-                android:layout_marginLeft="10sp"
+                android:layout_marginStart="10sp"
                 android:layout_marginBottom="10sp"
                 android:layout_width="30sp"
-                android:layout_height="30sp" />
+                android:layout_height="30sp"
+                android:contentDescription="@string/head_img" />
 
             <LinearLayout
                 android:gravity="center_horizontal"
@@ -34,7 +36,7 @@
 
                 <TextView
                     android:gravity="center_horizontal"
-                    android:layout_marginRight="40sp"
+                    android:layout_marginEnd="40sp"
                     android:textSize="24sp"
                     android:text="@string/app_name"
                     android:layout_width="match_parent"
@@ -63,14 +65,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:paddingLeft="15sp"
-                android:text="请选择年月"
-                android:textColor="#000" />
+                android:paddingStart="15sp"
+                android:text="@string/choose_year_month"
+                android:textColor="#000"
+                tools:ignore="RtlSymmetry" />
 
             <View
                 android:layout_width="1px"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="10sp"
+                android:layout_marginStart="10sp"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
                 android:background="#ff464646" />
@@ -81,7 +84,6 @@
                 android:layout_weight="0.5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="收入:"
                 android:textColor="#000" />
 
             <TextView
@@ -90,7 +92,6 @@
                 android:layout_weight="0.5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="支出:"
                 android:textColor="#000" />
 
         </LinearLayout>
@@ -106,21 +107,6 @@
             android:id="@+id/swipe"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
-<!--            <LinearLayout-->
-<!--                android:id="@+id/detail_no"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="match_parent" >-->
-
-<!--                <TextView-->
-<!--                    android:layout_marginTop="20dp"-->
-<!--                    android:gravity="center"-->
-<!--                    android:textSize="25dp"-->
-<!--                    android:text="还没有信息呢"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content" />-->
-
-<!--            </LinearLayout>-->
 
             <LinearLayout
                 android:id="@+id/detail_yes"

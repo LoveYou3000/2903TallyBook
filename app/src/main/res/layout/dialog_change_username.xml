@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -9,14 +10,15 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        tools:ignore="UselessParent">
 
         <TextView
             android:layout_marginTop="20sp"
             android:textColor="#000"
-            android:textSize="18dp"
+            android:textSize="18sp"
             android:gravity="center_horizontal"
-            android:text="用户名"
+            android:text="@string/username_ch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
@@ -25,9 +27,12 @@
             android:layout_marginLeft="20sp"
             android:layout_marginTop="10sp"
             android:id="@+id/edit_username"
-            android:hint="请输入2~16位的用户名"
+            android:hint="@string/username_hint"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:autofillHints=""
+            android:inputType="text"
+            tools:ignore="TextFields" />
 
         <LinearLayout
             android:layout_marginBottom="20sp"
@@ -39,21 +44,21 @@
 
             <TextView
                 android:id="@+id/changename_cancel"
-                android:layout_marginLeft="40sp"
-                android:layout_marginRight="20sp"
+                android:layout_marginStart="40sp"
+                android:layout_marginEnd="20sp"
                 android:layout_weight="0.5"
                 android:textColor="#000"
-                android:text="取消"
+                android:text="@string/cancel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
             <TextView
                 android:id="@+id/changename_confirm"
-                android:layout_marginLeft="20sp"
-                android:layout_marginRight="40sp"
+                android:layout_marginStart="20sp"
+                android:layout_marginEnd="40sp"
                 android:layout_weight="0.5"
                 android:textColor="#000"
-                android:text="确认"
+                android:text="@string/confirm"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 

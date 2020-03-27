@@ -14,9 +14,9 @@
 
         <TextView
             android:layout_margin="10sp"
-            android:textSize="20dp"
+            android:textSize="20sp"
             android:gravity="center_horizontal"
-            android:text="预算"
+            android:text="@string/budget"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
@@ -59,7 +59,7 @@
                             android:id="@+id/budget_edit"
                             android:textSize="18sp"
                             android:layout_margin="10sp"
-                            android:text="编辑预算"
+                            android:text="@string/edit_saving"
                             android:gravity="right"
                             android:layout_weight="0.5"
                             android:layout_width="match_parent"
@@ -77,7 +77,7 @@
                             android:id="@+id/circle_bar"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_margin="20dp"
+                            android:layout_margin="10dp"
                             android:layout_gravity="center_horizontal"
                             app:arcWidth="30dp"
                             app:circleRadius="80dp"
@@ -100,7 +100,7 @@
                                 android:layout_height="wrap_content" >
 
                                 <TextView
-                                    android:text="剩余预算"
+                                    android:text="@string/remain_amount"
                                     android:layout_weight="0.5"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content" />
@@ -128,7 +128,7 @@
                                 android:layout_height="wrap_content" >
 
                                 <TextView
-                                    android:text="本月预算"
+                                    android:text="@string/month_budget"
                                     android:layout_weight="0.5"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content" />
@@ -138,7 +138,8 @@
                                     android:gravity="right"
                                     android:layout_weight="0.5"
                                     android:layout_width="match_parent"
-                                    android:layout_height="wrap_content" />
+                                    android:layout_height="wrap_content"
+                                    tools:ignore="RtlHardcoded" />
 
                             </LinearLayout>
 
@@ -149,7 +150,7 @@
                                 android:layout_height="wrap_content" >
 
                                 <TextView
-                                    android:text="本月支出"
+                                    android:text="@string/month_out"
                                     android:layout_weight="0.5"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content" />
@@ -159,7 +160,8 @@
                                     android:gravity="right"
                                     android:layout_weight="0.5"
                                     android:layout_width="match_parent"
-                                    android:layout_height="wrap_content" />
+                                    android:layout_height="wrap_content"
+                                    tools:ignore="RtlHardcoded" />
 
                             </LinearLayout>
 
@@ -170,7 +172,7 @@
                                 android:layout_height="wrap_content" >
 
                                 <TextView
-                                    android:text="本月收入"
+                                    android:text="@string/month_in"
                                     android:layout_weight="0.5"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content" />
@@ -180,7 +182,8 @@
                                     android:gravity="right"
                                     android:layout_weight="0.5"
                                     android:layout_width="match_parent"
-                                    android:layout_height="wrap_content" />
+                                    android:layout_height="wrap_content"
+                                    tools:ignore="RtlHardcoded" />
 
                             </LinearLayout>
 
@@ -202,22 +205,22 @@
 
                         <TextView
                             android:textColor="@color/md_black_1000"
-                            android:textSize="18dp"
+                            android:textSize="18sp"
                             android:layout_weight="0.5"
                             android:layout_margin="10sp"
-                            android:text="存钱管理"
+                            android:text="@string/saving_manage"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content" />
 
                         <TextView
                             android:id="@+id/saving_edit"
-                            android:textSize="18dp"
+                            android:textSize="18sp"
                             android:layout_margin="10sp"
-                            android:text="编辑"
                             android:gravity="right"
                             android:layout_weight="0.5"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content"
+                            tools:ignore="RtlHardcoded" />
 
                     </LinearLayout>
 
@@ -230,14 +233,13 @@
                         android:layout_height="wrap_content" >
 
                         <LinearLayout
-                            android:layout_marginTop="10sp"
                             android:layout_marginBottom="10sp"
                             android:orientation="horizontal"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content" >
 
                             <TextView
-                                android:text="存钱目的"
+                                android:text="@string/saving_purpose"
                                 android:layout_weight="0.5"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content" />
@@ -248,24 +250,25 @@
                                 android:gravity="right"
                                 android:layout_weight="0.5"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content" />
+                                android:layout_height="wrap_content"
+                                tools:ignore="RtlHardcoded" />
 
                         </LinearLayout>
 
                         <View
-                            android:layout_marginTop="10sp"
+                            android:layout_marginTop="5sp"
                             android:layout_width="match_parent"
                             android:layout_height="1px"
                             android:background="#ff464646"/>
 
                         <LinearLayout
-                            android:layout_marginTop="20sp"
+                            android:layout_marginTop="10sp"
                             android:orientation="horizontal"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content" >
 
                             <TextView
-                                android:text="所需金额"
+                                android:text="@string/saving_need"
                                 android:layout_weight="0.5"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content" />
@@ -275,7 +278,8 @@
                                 android:gravity="right"
                                 android:layout_weight="0.5"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content" />
+                                android:layout_height="wrap_content"
+                                tools:ignore="RtlHardcoded" />
 
                         </LinearLayout>
 
@@ -286,7 +290,7 @@
                             android:layout_height="wrap_content" >
 
                             <TextView
-                                android:text="已存金额"
+                                android:text="@string/saving_already"
                                 android:layout_weight="0.5"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content" />
@@ -296,7 +300,8 @@
                                 android:gravity="right"
                                 android:layout_weight="0.5"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content" />
+                                android:layout_height="wrap_content"
+                                tools:ignore="RtlHardcoded" />
 
                         </LinearLayout>
 
@@ -307,7 +312,7 @@
                             android:layout_height="wrap_content" >
 
                             <TextView
-                                android:text="所需金额"
+                                android:text="@string/saving_need"
                                 android:layout_weight="0.5"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content" />
@@ -317,7 +322,8 @@
                                 android:gravity="right"
                                 android:layout_weight="0.5"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content" />
+                                android:layout_height="wrap_content"
+                                tools:ignore="RtlHardcoded" />
 
                         </LinearLayout>
 
@@ -331,12 +337,11 @@
                         <TextView
                             android:padding="10dp"
                             android:layout_margin="20dp"
-                            android:background="@color/md_red_400"
+                            android:background="@color/md_red_200"
                             android:id="@+id/saving_status"
                             android:textColor="#000"
-                            android:textSize="25sp"
+                            android:textSize="20sp"
                             android:gravity="center_horizontal"
-                            android:text="革命尚未成功,同志仍需努力!"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content" />
 

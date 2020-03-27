@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:background="@color/md_grey_300"
     android:layout_margin="10dp"
@@ -10,7 +11,8 @@
     <LinearLayout
         android:layout_gravity="left"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        tools:ignore="RtlHardcoded">
 
         <TextView
             android:layout_marginTop="5sp"
@@ -18,7 +20,6 @@
             android:layout_marginBottom="5sp"
             android:textSize="14sp"
             android:id="@+id/detail_time"
-            android:text="2020年2月25日"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
@@ -26,25 +27,27 @@
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:baselineAligned="false">
 
         <LinearLayout
             android:layout_margin="10sp"
             android:gravity="center_vertical"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            tools:ignore="UseCompoundDrawables">
 
             <ImageView
                 android:id="@+id/detail_categoryID"
                 android:src="@drawable/link_mine"
                 android:layout_width="30dp"
-                android:layout_height="30dp" />
+                android:layout_height="30dp"
+                android:contentDescription="@string/direction" />
 
             <TextView
                 android:id="@+id/detail_category"
                 android:textColor="#000"
-                android:text="日常"
-                android:layout_marginLeft="20sp"
+                android:layout_marginStart="20sp"
                 android:textSize="22sp"
                 android:layout_width="100sp"
                 android:layout_height="wrap_content" />
@@ -53,17 +56,17 @@
 
         <LinearLayout
             android:layout_weight="1"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content" >
 
             <TextView
-                android:layout_marginLeft="120sp"
+                android:layout_marginStart="120sp"
                 android:gravity="right"
                 android:id="@+id/detail_amount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="-150元"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                tools:ignore="RtlHardcoded" />
 
         </LinearLayout>
 

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -33,14 +34,15 @@
                 <Button
                     android:background="#000"
                     android:textColor="#fff"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="10dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="10dp"
                     android:layout_marginBottom="10dp"
                     android:id="@+id/table_select_week"
-                    android:text="周"
+                    android:text="@string/week"
                     android:layout_weight="0.3"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    tools:ignore="ButtonStyle" />
 
                 <Button
                     android:background="#fff"
@@ -48,21 +50,23 @@
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
                     android:id="@+id/table_select_month"
-                    android:text="月"
+                    android:text="@string/month"
                     android:layout_weight="0.3"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    tools:ignore="ButtonStyle" />
 
                 <Button
                     android:background="#fff"
                     android:textColor="#000"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="20dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="20dp"
                     android:id="@+id/table_select_year"
-                    android:text="年"
+                    android:text="@string/year"
                     android:layout_weight="0.3"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    tools:ignore="ButtonStyle" />
 
             </LinearLayout>
 
@@ -79,7 +83,6 @@
             android:id="@+id/table_show_selected"
             android:layout_margin="10sp"
             android:textSize="20sp"
-            android:text="本周"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
@@ -89,15 +92,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#ffffff" />
-
-<!--        <ListView-->
-<!--            android:visibility="gone"-->
-<!--            android:divider="@null"-->
-<!--            android:scrollbars="none"-->
-<!--            android:layout_marginTop="15dp"-->
-<!--            android:id="@+id/table_listview"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent" />-->
 
     </LinearLayout>
 

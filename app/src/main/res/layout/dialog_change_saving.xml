@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -14,7 +15,7 @@
             android:textColor="#000"
             android:gravity="center_horizontal"
             android:textSize="20sp"
-            android:text="设置存钱"
+            android:text="@string/set_saving"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
@@ -33,8 +34,8 @@
             android:layout_height="wrap_content" >
 
             <TextView
-                android:textSize="18dp"
-                android:text="存钱目的"
+                android:textSize="18sp"
+                android:text="@string/saving_purpose"
                 android:layout_weight="0.7"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
@@ -43,7 +44,10 @@
                 android:id="@+id/set_saving_purpose"
                 android:layout_weight="0.3"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:autofillHints="@string/saving_purpose"
+                android:inputType="text"
+                tools:ignore="LabelFor" />
 
         </LinearLayout>
 
@@ -55,8 +59,8 @@
             android:layout_height="wrap_content" >
 
             <TextView
-                android:textSize="18dp"
-                android:text="存钱金额"
+                android:textSize="18sp"
+                android:text="@string/saving_amount"
                 android:layout_weight="0.7"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
@@ -65,7 +69,10 @@
                 android:id="@+id/set_saving_amount"
                 android:layout_weight="0.3"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:autofillHints="@string/saving_amount"
+                android:inputType="text"
+                tools:ignore="LabelFor" />
 
         </LinearLayout>
 
@@ -78,19 +85,21 @@
 
             <Button
                 android:id="@+id/change_saving_cancel"
-                android:text="取消"
+                android:text="@string/cancel"
                 android:layout_margin="10sp"
                 android:layout_weight="0.5"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                tools:ignore="ButtonStyle" />
 
             <Button
                 android:id="@+id/change_saving_confirm"
-                android:text="确认"
+                android:text="@string/confirm"
                 android:layout_margin="10sp"
                 android:layout_weight="0.5"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                tools:ignore="ButtonStyle" />
 
         </LinearLayout>
 

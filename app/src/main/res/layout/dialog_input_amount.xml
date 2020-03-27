@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -13,7 +14,7 @@
 
         <TextView
             android:textSize="20sp"
-            android:text="请输入金额"
+            android:text="@string/amount_hint"
             android:layout_weight="0.6"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
@@ -22,11 +23,14 @@
             android:id="@+id/input_detail_amount"
             android:layout_weight="0.4"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:autofillHints="@string/amount_hint"
+            android:inputType="number"
+            tools:ignore="LabelFor" />
 
         <TextView
             android:textSize="20sp"
-            android:text="元"
+            android:text="@string/RMB"
             android:layout_weight="0.9"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
@@ -40,17 +44,19 @@
 
         <Button
             android:id="@+id/input_cancel"
-            android:text="取消"
+            android:text="@string/cancel"
             android:layout_weight="0.5"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            tools:ignore="ButtonStyle" />
 
         <Button
             android:id="@+id/input_confirm"
-            android:text="确认"
+            android:text="@string/confirm"
             android:layout_weight="0.5"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            tools:ignore="ButtonStyle" />
 
     </LinearLayout>
 
