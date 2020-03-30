@@ -4,6 +4,7 @@ import cn.bmob.v3.BmobObject;
 
 /**
  * 预算实体类
+ *
  * @author MACHENIKE
  */
 public class Budget extends BmobObject {

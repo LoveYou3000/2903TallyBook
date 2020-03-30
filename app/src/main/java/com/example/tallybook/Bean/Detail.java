@@ -10,6 +10,7 @@ import cn.bmob.v3.BmobObject;
 
 /**
  * 明细实体类
+ *
  * @author MACHENIKE
  */
 public class Detail extends BmobObject {

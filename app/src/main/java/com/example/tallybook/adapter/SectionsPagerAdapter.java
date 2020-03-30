@@ -20,10 +20,10 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     }
 
     /**
-     * @Author MACHENIKE
-     * @Description TODO 返回某一个fragment
      * @param position 当前位置
      * @return androidx.fragment.app.Fragment
+     * @Author MACHENIKE
+     * @Description TODO 返回某一个fragment
      **/
     @NonNull
     @Override
@@ -32,9 +32,9 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     }
 
     /**
+     * @return int
      * @Author MACHENIKE
      * @Description TODO 获取fragment列表的长度
-     * @return int
      **/
     @Override
     public int getCount() {

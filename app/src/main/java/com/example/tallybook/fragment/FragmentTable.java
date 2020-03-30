@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -45,6 +44,8 @@ import lecho.lib.hellocharts.model.ValueShape;
 import lecho.lib.hellocharts.model.Viewport;
 import lecho.lib.hellocharts.view.LineChartView;
 
+import static com.example.tallybook.common.ShowToast.showToast;
+
 /**
  * 图表页面
  *
@@ -53,69 +54,57 @@ import lecho.lib.hellocharts.view.LineChartView;
 public class FragmentTable extends Fragment {
 
     /**
-     * 当前用户
-     */
-    private User user;
-
-    /**
-     * 下拉列表控件
-     */
-    private NiceSpinner tableNiceSpinner;
-
-    /**
-     * 选择 周\月\年 之后的提示语
-     */
-    private TextView tableShowSelected;
-
-    /**
-     * 选择周
-     */
-    private Button tableSelectWeek;
-
-    /**
-     * 选择月
-     */
-    private Button tableSelectMonth;
-
-    /**
-     * 选择年
-     */
-    private Button tableSelectYear;
-
-    /**
-     * 折线图
-     */
-    private LineChartView tableLineChart;
-
-    /**
-     * 数据
-     */
-    private Map<String, Double> tableData;
-
-    /**
-     * 日期列表  用于折线图的X轴
-     */
-    private List<AxisValue> dateList;
-
-    /**
-     * 金额列表  用于折线图的Y轴
-     */
-    private List<PointValue> amountList;
-
-    /**
      * 周标志
      */
     private final int WEEK = 0;
-
     /**
      * 月标志
      */
     private final int MONTH = 1;
-
     /**
      * 年标志
      */
     private final int YEAR = 2;
+    /**
+     * 当前用户
+     */
+    private User user;
+    /**
+     * 下拉列表控件
+     */
+    private NiceSpinner tableNiceSpinner;
+    /**
+     * 选择 周\月\年 之后的提示语
+     */
+    private TextView tableShowSelected;
+    /**
+     * 选择周
+     */
+    private Button tableSelectWeek;
+    /**
+     * 选择月
+     */
+    private Button tableSelectMonth;
+    /**
+     * 选择年
+     */
+    private Button tableSelectYear;
+    /**
+     * 折线图
+     */
+    private LineChartView tableLineChart;
+    /**
+     * 数据
+     */
+    private Map<String, Double> tableData;
+    /**
+     * 日期列表  用于折线图的X轴
+     */
+    private List<AxisValue> dateList;
+    /**
+     * 金额列表  用于折线图的Y轴
+     */
+    private List<PointValue> amountList;
 
     @Nullable
     @Override
@@ -131,27 +120,6 @@ public class FragmentTable extends Fragment {
         setListeners();
 
         showWeekData(tableNiceSpinner.getText().toString());
-    }
-
-    /**
-     * @param msg 要显示的信息
-     * @return void
-     * @Author MACHENIKE
-     * @Description TODO 显示Toast信息
-     **/
-    private void showToast(String msg) {
-        Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
-    }
-
-    /**
-     * @param msg 要显示的信息
-     * @param e   异常信息
-     * @return void
-     * @Author MACHENIKE
-     * @Description TODO 显示Toast信息
-     **/
-    private void showToast(String msg, BmobException e) {
-        Toast.makeText(getActivity(), msg + "\n" + e.getErrorCode() + "\n" + e.getMessage(), Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -323,7 +291,7 @@ public class FragmentTable extends Fragment {
             public void done(List<Detail> list, BmobException e) {
                 if (e == null) {
                     if (list.size() == 0) {
-                        showToast("还没有信息呢");
+                        showToast(getActivity(), "还没有信息呢");
                     }
 
                     @SuppressLint("SimpleDateFormat")
@@ -452,7 +420,7 @@ public class FragmentTable extends Fragment {
                     tableLineChart.setCurrentViewport(v);
 
                 } else {
-                    showToast("查询明细失败", e);
+                    showToast(getActivity(), "查询明细失败", e);
                 }
             }
         });

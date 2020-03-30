@@ -10,7 +10,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -19,13 +18,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.tallybook.Bean.User;
 import com.example.tallybook.R;
 
-import cn.bmob.v3.Bmob;
+import org.angmarch.views.NiceSpinner;
+
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.UpdateListener;
 
+import static com.example.tallybook.common.ShowToast.showToast;
+
 /**
  * 个人信息界面
+ *
  * @author MACHENIKE
  */
 public class PersonalInfo extends AppCompatActivity {
@@ -85,21 +88,22 @@ public class PersonalInfo extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_personal_info);
 
-        Bmob.initialize(this, "4c0d8bc51d99076175282cb6010f0f85");
-
         initView();
         setListener();
+
+        showPersonalInfo();
     }
 
     /**
-     * @param msg 要显示的信息
      * @return void
      * @Author MACHENIKE
-     * @Description TODO 显示Toast信息
+     * @Description TODO 展示个人信息
      **/
-    public void showToast(String msg) {
-        Toast.makeText(PersonalInfo.this, msg, Toast.LENGTH_SHORT).show();
+    private void showPersonalInfo() {
+        personalUsernameShow.setText(user.getUsername());
+        personalSexShow.setText(user.getSex());
     }
+
 
     /**
      * @return void
@@ -113,51 +117,30 @@ public class PersonalInfo extends AppCompatActivity {
         //修改头像点击事件
         personalHead.setOnClickListener(v -> {
             //插入修改头像代码
-            showToast("修改头像");
+            showToast(PersonalInfo.this, "修改头像");
         });
 
         //修改用户名点击事件
         personalUsername.setOnClickListener(v -> {
-            //初始化一个dialog
             AlertDialog.Builder changeUsernameDialog = new AlertDialog.Builder(PersonalInfo.this);
-            //初始化一个view
             View usernameView = View.inflate(PersonalInfo.this, R.layout.dialog_change_username, null);
-            //设置dialog的view
+
             changeUsernameDialog.setView(usernameView).create();
-            //展示dialog
             AlertDialog show = changeUsernameDialog.show();
-            //获取view中的各个控件
+
             EditText editUsername = usernameView.findViewById(R.id.edit_username);
             TextView changeConfirm = usernameView.findViewById(R.id.changename_confirm);
             TextView changeCancel = usernameView.findViewById(R.id.changename_cancel);
-            //确认按钮点击事件
+
+            changeCancel.setOnClickListener(v2 -> show.dismiss());
+
             changeConfirm.setOnClickListener(v1 -> {
-                String newUsername = editUsername.getText().toString();
-                //判断是否符合规则
-                if (2 <= newUsername.length() && 16 >= newUsername.length()) {
-                    //更新后台用户信息
-                    user.setUsername(newUsername);
-                    user.update(new UpdateListener() {
-                        @Override
-                        public void done(BmobException e) {
-                            if (e == null) {
-                                showToast("修改成功");
-                                //将新的用户名更新到显示用户名的地方
-                                personalUsernameShow.setText(user.getUsername());
-                            } else {
-                                showToast("修改失败\n" + e.getErrorCode() + "\n" + e.getMessage());
-                            }
-                        }
-                    });
-                    show.dismiss();
-                } else {
-                    showToast("用户名不合法");
-                    editUsername.setText("");
-                }
+                changeUsername(editUsername.getText().toString());
+                showPersonalInfo();
+                show.dismiss();
 
             });
-            //取消按钮点击事件
-            changeCancel.setOnClickListener(v2 -> show.dismiss());
+
         });
 
         //修改性别点击事件
@@ -169,44 +152,15 @@ public class PersonalInfo extends AppCompatActivity {
             changeSexeDialog.setView(sexView).create();
             AlertDialog show = changeSexeDialog.show();
 
-            Button setSexMale = sexView.findViewById(R.id.set_sex_male);
-            Button setSexFemale = sexView.findViewById(R.id.set_sex_female);
+            NiceSpinner gender = sexView.findViewById(R.id.change_sex_spinner);
+            TextView changeGenderCancel = sexView.findViewById(R.id.change_gender_cancel);
+            TextView changeGenderConfirm = sexView.findViewById(R.id.change_gender_confirm);
 
-            setSexMale.setOnClickListener(v12 -> {
-                user.setSex("男");
+            changeGenderCancel.setOnClickListener(v1 -> show.dismiss());
 
-                user.update(new UpdateListener() {
-                    @Override
-                    public void done(BmobException e) {
-                        if (e == null) {
-                            showToast("修改性别成功");
-                            //更新信息到界面
-                            personalSexShow.setText(user.getSex());
-                        } else {
-                            showToast("修改失败\n" + e.getErrorCode() + "\n" + e.getMessage());
-                        }
-                    }
-                });
-
-                show.dismiss();
-            });
-
-            setSexFemale.setOnClickListener(v13 -> {
-                user.setSex("女");
-
-                user.update(new UpdateListener() {
-                    @Override
-                    public void done(BmobException e) {
-                        if (e == null) {
-                            showToast("修改性别成功");
-                            //更新信息到界面
-                            personalSexShow.setText(user.getSex());
-                        } else {
-                            showToast("修改失败\n" + e.getErrorCode() + "\n" + e.getMessage());
-                        }
-                    }
-                });
-
+            changeGenderConfirm.setOnClickListener(v1 -> {
+                changeSex(gender.getText().toString());
+                showPersonalInfo();
                 show.dismiss();
             });
         });
@@ -226,25 +180,10 @@ public class PersonalInfo extends AppCompatActivity {
 
             AlertDialog show = changePasswordDialog.show();
 
-            //取消按钮点击事件
             changePasswordCancel.setOnClickListener(v1 -> show.dismiss());
 
             changePasswordConfirm.setOnClickListener(v1 -> {
-
-                BmobUser.updateCurrentUserPassword(oldPassword.getText().toString(),
-                        newPassword.getText().toString(), new UpdateListener() {
-                            @Override
-                            public void done(BmobException e) {
-                                if (e == null) {
-                                    showToast("更新成功,请重新登陆");
-                                    BmobUser.logOut();
-                                    startActivity(new Intent(PersonalInfo.this, Login.class));
-                                    finish();
-                                } else {
-                                    showToast("更新失败\n" + e.getErrorCode() + "\n" + e.getMessage());
-                                }
-                            }
-                        });
+                changePassword(oldPassword.getText().toString(), newPassword.getText().toString());
                 show.dismiss();
             });
         });
@@ -258,6 +197,97 @@ public class PersonalInfo extends AppCompatActivity {
                 finish();
             }).setNegativeButton("取消", null).create().show();
         });
+    }
+
+    /**
+     * @param portraitId 头像id
+     * @return void
+     * @Author MACHENIKE
+     * @Description TODO 修改头像
+     **/
+    public void changePortraitId(int portraitId) {
+        user.setPortraitId(portraitId);
+
+        user.update(new UpdateListener() {
+            @Override
+            public void done(BmobException e) {
+                if (e == null) {
+                    showToast(PersonalInfo.this, "修改头像成功");
+                } else {
+                    showToast(PersonalInfo.this, "修改头像失败", e);
+                }
+            }
+        });
+    }
+
+    /**
+     * @param oldPassword 旧密码
+     * @param newPassword 新密码
+     * @return void
+     * @Author MACHENIKE
+     * @Description TODO 修改密码
+     **/
+    private void changePassword(String oldPassword, String newPassword) {
+        BmobUser.updateCurrentUserPassword(oldPassword, newPassword, new UpdateListener() {
+            @Override
+            public void done(BmobException e) {
+                if (e == null) {
+                    showToast(PersonalInfo.this, "修改密码成功,请重新登陆");
+                    BmobUser.logOut();
+                    startActivity(new Intent(PersonalInfo.this, Login.class));
+                    finish();
+                } else {
+                    showToast(PersonalInfo.this, "修改密码失败", e);
+                }
+            }
+        });
+    }
+
+    /**
+     * @param sex 要修改的性别
+     * @return void
+     * @Author MACHENIKE
+     * @Description TODO 修改性别
+     **/
+    private void changeSex(String sex) {
+        user.setSex(sex);
+
+        user.update(new UpdateListener() {
+            @Override
+            public void done(BmobException e) {
+                if (e == null) {
+                    showToast(PersonalInfo.this, "修改性别成功");
+                } else {
+                    showToast(PersonalInfo.this, "修改失败", e);
+                }
+            }
+        });
+    }
+
+    /**
+     * @param newUsername 新用户名
+     * @return void
+     * @Author MACHENIKE
+     * @Description TODO 修改用户名
+     **/
+    private void changeUsername(String newUsername) {
+        //判断是否符合规则
+        if (2 <= newUsername.length() && 16 >= newUsername.length()) {
+            //更新后台用户信息
+            user.setUsername(newUsername);
+            user.update(new UpdateListener() {
+                @Override
+                public void done(BmobException e) {
+                    if (e == null) {
+                        showToast(PersonalInfo.this, "修改用户名成功");
+                    } else {
+                        showToast(PersonalInfo.this, "修改用户名失败", e);
+                    }
+                }
+            });
+        } else {
+            showToast(PersonalInfo.this, "用户名不合法");
+        }
     }
 
     /**
@@ -280,8 +310,5 @@ public class PersonalInfo extends AppCompatActivity {
         personalSexShow = findViewById(R.id.personal_sex_show);
 
         logout = findViewById(R.id.logout);
-
-        personalUsernameShow.setText(user.getUsername());
-        personalSexShow.setText(user.getSex());
     }
 }

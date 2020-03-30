@@ -8,6 +8,13 @@
 
     </string-array>
 
+    <string-array name="gender">
+
+        <item>男</item>
+        <item>女</item>
+
+    </string-array>
+
     <string-array name="out_category">
 
         <item>food_and_beverage</item>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -12,17 +12,52 @@
         android:layout_height="wrap_content"
         tools:ignore="UselessParent">
 
-        <Button
-            android:id="@+id/set_sex_male"
-            android:text="@string/male"
-            android:layout_width="match_parent"
+        <org.angmarch.views.NiceSpinner
+            android:id="@+id/change_sex_spinner"
+            app:entries="@array/gender"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
-        <Button
-            android:id="@+id/set_sex_female"
-            android:text="@string/female"
+        <LinearLayout
+            android:orientation="horizontal"
+            android:padding="10dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:layout_weight="0.5"
+                android:id="@+id/change_gender_cancel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:background="@drawable/blue_fill__rounded_color"
+                android:gravity="center"
+                android:paddingTop="14dp"
+                android:paddingBottom="14dp"
+                android:text="@string/cancel"
+                android:textColor="#ffffff"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_weight="0.5"
+                android:id="@+id/change_gender_confirm"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:background="@drawable/blue_fill__rounded_color"
+                android:gravity="center"
+                android:paddingTop="14dp"
+                android:paddingBottom="14dp"
+                android:text="@string/confirm"
+                android:textColor="#ffffff"
+                android:textSize="14sp" />
+
+        </LinearLayout>
 
     </LinearLayout>
 

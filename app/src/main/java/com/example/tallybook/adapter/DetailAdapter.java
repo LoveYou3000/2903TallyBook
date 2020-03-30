@@ -28,8 +28,11 @@ import java.util.Objects;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.UpdateListener;
 
+import static com.example.tallybook.common.ShowToast.showToast;
+
 /**
  * 明细适配器
+ *
  * @author MACHENIKE
  */
 public class DetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -60,10 +63,10 @@ public class DetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private int maxNum = 15;
 
     /**
+     * @param context 上下文
+     * @param data    数据
      * @Author MACHENIKE
      * @Description TODO 构造函数
-     * @param context 上下文
-     * @param data  数据
      **/
     public DetailAdapter(Context context, List<Detail> data) {
         this.context = context;
@@ -74,9 +77,9 @@ public class DetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         //初始化view：明细
-        View detailView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_detail,parent,false);
+        View detailView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_detail, parent, false);
         //初始化view：底部加载
-        View footView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_foot,parent,false);
+        View footView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_foot, parent, false);
         //根据viewType选择接下来加载的view
         if (viewType == NORMAL_TYPE) {
             return new RecyclerViewHolder(detailView, NORMAL_TYPE);
@@ -95,23 +98,17 @@ public class DetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             handler.postDelayed(() -> {
                 maxNum += 8;
                 notifyDataSetChanged();
-            },500);
+            }, 500);
         } else {
             Detail detail = data.get(position);
             //设置明细中的值
-            if ("收入".equals(detail.getDirection())) {
-                recyclerViewHolder.detailAmount.setText("+" + detail.getAmount() + "元");
-            } else {
-                recyclerViewHolder.detailAmount.setText("-" + detail.getAmount() + "元");
-            }
-            recyclerViewHolder.detailCategory.setText(detail.getCategory());
-            recyclerViewHolder.detailTime.setText(detail.getFullDate());
+            setDetailInfo(detail, recyclerViewHolder);
 
             //每一个明细长按事件
             recyclerViewHolder.itemView.setOnLongClickListener(v -> {
                 AlertDialog.Builder detailMore = new AlertDialog.Builder(context);
                 @SuppressLint("InflateParams")
-                View detailMoreView = LayoutInflater.from(context).inflate(R.layout.dialog_detail_more,null);
+                View detailMoreView = LayoutInflater.from(context).inflate(R.layout.dialog_detail_more, null);
                 detailMore.setView(detailMoreView).create();
 
                 AlertDialog show = detailMore.show();
@@ -123,7 +120,7 @@ public class DetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 detailMoreChange.setOnClickListener(v12 -> {
                     AlertDialog.Builder detailMoreChange1 = new AlertDialog.Builder(context);
                     @SuppressLint("InflateParams")
-                    View detailMoreChangeView = LayoutInflater.from(context).inflate(R.layout.dialog_detail_more_change,null);
+                    View detailMoreChangeView = LayoutInflater.from(context).inflate(R.layout.dialog_detail_more_change, null);
 
                     detailMoreChange1.setView(detailMoreChangeView).create();
                     AlertDialog showChange = detailMoreChange1.show();
@@ -133,24 +130,25 @@ public class DetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                     Button detailMoreChangeCancel = detailMoreChangeView.findViewById(R.id.detail_more_change_cancel);
                     Button detailMoreChangeConfirm = detailMoreChangeView.findViewById(R.id.detail_more_change_confirm);
 
-                    //英文的去向
-                    String[] enDir;
-                    //按照去向获取
-                    if ("支出".equals(detail.getDirection())) {
-                        enDir = context.getResources().getStringArray(R.array.out_category);
-                    } else {
-                        enDir = context.getResources().getStringArray(R.array.in_category);
-                    }
-                    //按照英文去向获取中文去向
-                    List<String> chDir = new ArrayList<>();
-                    for (String tEnDir : enDir) {
-                        try {
-                            Field chField = R.string.class.getDeclaredField(tEnDir);
-                            chDir.add(context.getResources().getString(Integer.parseInt(Objects.requireNonNull(chField.get(null)).toString())));
-                        } catch (NoSuchFieldException | IllegalAccessException e) {
-                            e.printStackTrace();
-                        }
-                    }
+//                    //英文的去向
+//                    String[] enDir;
+//                    //按照去向获取
+//                    if ("支出".equals(detail.getDirection())) {
+//                        enDir = context.getResources().getStringArray(R.array.out_category);
+//                    } else {
+//                        enDir = context.getResources().getStringArray(R.array.in_category);
+//                    }
+//                    //按照英文去向获取中文去向
+//                    List<String> chDir = new ArrayList<>();
+//                    for (String tEnDir : enDir) {
+//                        try {
+//                            Field chField = R.string.class.getDeclaredField(tEnDir);
+//                            chDir.add(context.getResources().getString(Integer.parseInt(Objects.requireNonNull(chField.get(null)).toString())));
+//                        } catch (NoSuchFieldException | IllegalAccessException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+                    List<String> chDir = getChDir(detail);
 
                     //设置NiceSpinner的选项值
                     detailMoreDirection.attachDataSource(chDir);
@@ -181,9 +179,9 @@ public class DetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                             @Override
                             public void done(BmobException e) {
                                 if (e == null) {
-                                    Toast.makeText(context, "修改成功", Toast.LENGTH_SHORT).show();
+                                    showToast(context, "修改成功");
                                 } else {
-                                    Toast.makeText(context, "修改失败" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                    showToast(context, "修改失败", e);
                                 }
                             }
                         });
@@ -199,15 +197,15 @@ public class DetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                     AlertDialog.Builder detailMoreDelete1 = new AlertDialog.Builder(context);
                     detailMoreDelete1.setTitle("确认").setMessage("确认删除吗?\n\n注意:删除后不可恢复")
                             .setPositiveButton("确认", (dialog, which) -> detail.delete(new UpdateListener() {
-                        @Override
-                        public void done(BmobException e) {
-                            if (e == null) {
-                                Toast.makeText(context, "删除成功", Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(context, "删除失败", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    })).setNegativeButton("取消",null).show();
+                                @Override
+                                public void done(BmobException e) {
+                                    if (e == null) {
+                                        showToast(context, "删除成功");
+                                    } else {
+                                        showToast(context, "删除失败", e);
+                                    }
+                                }
+                            })).setNegativeButton("取消", null).show();
 
                     show.dismiss();
                 });
@@ -218,10 +216,56 @@ public class DetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
     /**
+     * @param detail 长按的目标明细
+     * @return java.util.List<java.lang.String>
      * @Author MACHENIKE
-     * @Description TODO 根据position返回类型
+     * @Description TODO 按照目标明细的去向获取所有类别
+     **/
+    private List<String> getChDir(Detail detail) {
+        //英文的去向
+        String[] enDir;
+        //按照去向获取
+        if ("支出".equals(detail.getDirection())) {
+            enDir = context.getResources().getStringArray(R.array.out_category);
+        } else {
+            enDir = context.getResources().getStringArray(R.array.in_category);
+        }
+        //按照英文去向获取中文去向
+        List<String> chDir = new ArrayList<>();
+        for (String tEnDir : enDir) {
+            try {
+                Field chField = R.string.class.getDeclaredField(tEnDir);
+                chDir.add(context.getResources().getString(Integer.parseInt(Objects.requireNonNull(chField.get(null)).toString())));
+            } catch (NoSuchFieldException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+        return chDir;
+    }
+
+    /**
+     * @param detail             明细信息
+     * @param recyclerViewHolder 容纳recyclerView
+     * @return void
+     * @Author MACHENIKE
+     * @Description TODO 显示明细信息
+     **/
+    @SuppressLint("SetTextI18n")
+    private void setDetailInfo(Detail detail, RecyclerViewHolder recyclerViewHolder) {
+        if ("收入".equals(detail.getDirection())) {
+            recyclerViewHolder.detailAmount.setText("+" + detail.getAmount() + "元");
+        } else {
+            recyclerViewHolder.detailAmount.setText("-" + detail.getAmount() + "元");
+        }
+        recyclerViewHolder.detailCategory.setText(detail.getCategory());
+        recyclerViewHolder.detailTime.setText(detail.getFullDate());
+    }
+
+    /**
      * @param position 当前明细的位置
      * @return int
+     * @Author MACHENIKE
+     * @Description TODO 根据position返回类型
      **/
     @Override
     public int getItemViewType(int position) {
@@ -233,9 +277,9 @@ public class DetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
     /**
+     * @return int
      * @Author MACHENIKE
      * @Description TODO 获取数据的长度
-     * @return int
      **/
     @Override
     public int getItemCount() {

@@ -16,8 +16,11 @@ import com.example.tallybook.R;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
 
+import static com.example.tallybook.common.ShowToast.showToast;
+
 /**
  * 注册页面
+ *
  * @author MACHENIKE
  */
 public class Register extends AppCompatActivity {
@@ -52,47 +55,48 @@ public class Register extends AppCompatActivity {
     }
 
     /**
-     * @Author MACHENIKE
-     * @Description TODO 显示Toast信息
-     * @param msg 要显示的信息
      * @return void
-     **/
-    public void showToast(String msg) {
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
-    }
-
-    /**
      * @Author MACHENIKE
      * @Description TODO 设置各控件的监听器
-     * @return void
      **/
     private void setListeners() {
-
         //注册按钮点击事件
         register.setOnClickListener(v -> {
-            user.setUsername(username.getText().toString().trim());
-            user.setPassword(password.getText().toString().trim());
-
-            user.signUp(new SaveListener<User>() {
-                @Override
-                public void done(User user, BmobException e) {
-                    if (e == null) {
-                        showToast("注册成功，请登录");
-                        startActivity(new Intent(Register.this, Login.class));
-                        finish();
-                    } else {
-                        showToast("注册失败\n" + e.getErrorCode() + "\n" + e.getMessage());
-                    }
-                }
-            });
+            register();
         });
-
     }
 
     /**
+     * @return void
+     * @Author MACHENIKE
+     * @Description TODO 用户注册
+     **/
+    private void register() {
+        user.setUsername(username.getText().toString().trim());
+        user.setPassword(password.getText().toString().trim());
+        user.setSex("隐私");
+        user.setPortraitId(0);
+
+        user.signUp(new SaveListener<User>() {
+            @Override
+            public void done(User user, BmobException e) {
+                if (e == null) {
+                    showToast(Register.this, "注册成功，请登录");
+                    startActivity(new Intent(Register.this, Login.class));
+                    finish();
+                } else {
+                    showToast(Register.this, "注册失败", e);
+                    username.setText("");
+                    password.setText("");
+                }
+            }
+        });
+    }
+
+    /**
+     * @return void
      * @Author MACHENIKE
      * @Description TODO 获取控件及初始化
-     * @return void
      **/
     private void initView() {
         user = new User();

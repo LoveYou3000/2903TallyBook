@@ -19,7 +19,7 @@
             android:layout_height="wrap_content" >
 
             <org.angmarch.views.NiceSpinner
-                android:textSize="18sp"
+                android:textSize="15sp"
                 android:id="@+id/table_nice_spinner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -87,7 +87,9 @@
             android:layout_height="wrap_content" />
 
         <lecho.lib.hellocharts.view.LineChartView
-            android:layout_margin="10dp"
+            android:layout_marginTop="-10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:id="@+id/table_line_chart"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

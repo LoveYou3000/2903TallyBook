@@ -2,6 +2,9 @@ package com.example.tallybook;
 
 import android.os.Bundle;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
 import com.example.tallybook.adapter.SectionsPagerAdapter;
@@ -12,20 +15,15 @@ import com.example.tallybook.fragment.FragmentDetail;
 import com.example.tallybook.fragment.FragmentMine;
 import com.example.tallybook.fragment.FragmentTable;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.bmob.v3.Bmob;
-
 /**
  * 主页面
+ *
  * @author MACHENIKE
  */
-public class MainActivity extends AppCompatActivity implements BottomNavigationBar.OnTabSelectedListener, ViewPager.OnPageChangeListener {
+public class MainActivity extends AppCompatActivity implements BottomNavigationBar.OnTabSelectedListener, NoSlideViewPager.OnPageChangeListener {
 
     /**
      * 禁止左右滑动的ViewPager
@@ -47,8 +45,15 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Bmob.initialize(this, "4c0d8bc51d99076175282cb6010f0f85");
+        init();
+    }
 
+    /**
+     * @return void
+     * @Author MACHENIKE
+     * @Description TODO 初始化
+     **/
+    private void init() {
         initView();
         initViewPager();
         initBottomNav();
@@ -60,10 +65,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
      * @Description TODO 获取View上的控件
      **/
     private void initView() {
-
         viewPager = findViewById(R.id.viewPager);
         bottomNavigationBar = findViewById(R.id.bottom_nav);
-
     }
 
     /**
@@ -72,21 +75,24 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
      * @Description TODO 初始化底部导航栏
      **/
     private void initBottomNav() {
-
         bottomNavigationBar.setTabSelectedListener(this);
         bottomNavigationBar.clearAll();
         bottomNavigationBar.setMode(BottomNavigationBar.MODE_FIXED);
         bottomNavigationBar.setBackgroundStyle(BottomNavigationBar.BACKGROUND_STYLE_DEFAULT);
         bottomNavigationBar.setBarBackgroundColor(R.color.md_grey_500)
-                           .setActiveColor(R.color.colorPrimaryDark)
-                           .setInActiveColor(R.color.md_black_1000);
-        bottomNavigationBar.addItem(new BottomNavigationItem(R.drawable.detail_fill,"明细").setInactiveIconResource(R.drawable.detail))
-                           .addItem(new BottomNavigationItem(R.drawable.table_fill,"图表").setInactiveIconResource(R.drawable.table))
-                           .addItem(new BottomNavigationItem(R.drawable.charge,"记账"))
-                           .addItem(new BottomNavigationItem(R.drawable.budget_fill,"预算").setInactiveIconResource(R.drawable.budget))
-                           .addItem(new BottomNavigationItem(R.drawable.mine_fill,"我的").setInactiveIconResource(R.drawable.mine))
-                           .setFirstSelectedPosition(0).initialise();
-
+                .setActiveColor(R.color.colorPrimaryDark)
+                .setInActiveColor(R.color.md_black_1000);
+        bottomNavigationBar.addItem(new BottomNavigationItem(R.drawable.detail_fill, "明细")
+                .setInactiveIconResource(R.drawable.detail))
+                .addItem(new BottomNavigationItem(R.drawable.table_fill, "图表")
+                        .setInactiveIconResource(R.drawable.table))
+                .addItem(new BottomNavigationItem(R.drawable.charge, "记账"))
+                .addItem(new BottomNavigationItem(R.drawable.budget_fill, "预算")
+                        .setInactiveIconResource(R.drawable.budget))
+                .addItem(new BottomNavigationItem(R.drawable.mine_fill, "我的")
+                        .setInactiveIconResource(R.drawable.mine))
+                .setFirstSelectedPosition(0)
+                .initialise();
     }
 
     /**
@@ -95,8 +101,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
      * @Description TODO 初始化ViewPager
      **/
     private void initViewPager() {
-
         fragments = new ArrayList<>();
+
         fragments.add(new FragmentDetail());
         fragments.add(new FragmentTable());
         fragments.add(new FragmentCharge());
@@ -104,15 +110,31 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
         fragments.add(new FragmentMine());
 
         viewPager.setOffscreenPageLimit(5);
-        viewPager.setAdapter(new SectionsPagerAdapter(getSupportFragmentManager(),fragments));
+        viewPager.setAdapter(new SectionsPagerAdapter(getSupportFragmentManager(), fragments));
         viewPager.addOnPageChangeListener(this);
         viewPager.setCurrentItem(0);
-
     }
 
+    /**
+     * @param position 选择的导航栏位置,从0开始
+     * @return void
+     * @Author MACHENIKE
+     * @Description TODO 更新底部导航栏
+     **/
     @Override
     public void onTabSelected(int position) {
         viewPager.setCurrentItem(position);
+    }
+
+    /**
+     * @param position 选择的ViewPager的位置,从0开始
+     * @return void
+     * @Author MACHENIKE
+     * @Description TODO 更新ViewPager
+     **/
+    @Override
+    public void onPageSelected(int position) {
+        bottomNavigationBar.selectTab(position);
     }
 
     @Override
@@ -128,11 +150,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
-    }
-
-    @Override
-    public void onPageSelected(int position) {
-        bottomNavigationBar.selectTab(position);
     }
 
     @Override

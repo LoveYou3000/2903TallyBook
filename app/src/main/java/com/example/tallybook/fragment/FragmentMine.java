@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -32,6 +31,8 @@ import cn.bmob.v3.datatype.BmobPointer;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.CountListener;
 import cn.bmob.v3.listener.FindListener;
+
+import static com.example.tallybook.common.ShowToast.showToast;
 
 /**
  * 我的页面
@@ -108,27 +109,6 @@ public class FragmentMine extends Fragment {
     }
 
     /**
-     * @param msg 要显示的信息
-     * @return void
-     * @Author MACHENIKE
-     * @Description TODO 显示Toast信息
-     **/
-    private void showToast(String msg) {
-        Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
-    }
-
-    /**
-     * @param msg 要显示的信息
-     * @param e   异常信息
-     * @return void
-     * @Author MACHENIKE
-     * @Description TODO 显示Toast信息
-     **/
-    private void showToast(String msg, BmobException e) {
-        Toast.makeText(getActivity(), msg + "\n" + e.getErrorCode() + "\n" + e.getMessage(), Toast.LENGTH_SHORT).show();
-    }
-
-    /**
      * @return void
      * @Author MACHENIKE
      * @Description TODO 将数据展示到页面上
@@ -155,7 +135,7 @@ public class FragmentMine extends Fragment {
                     mineCountDay.setText("已记账 " + dayNum + " 天");
                     mineCountDetail.setText("已记账 " + list.size() + " 笔");
                 } else {
-                    showToast("mine查询记账天数以及笔数失败", e);
+                    showToast(getActivity(), "mine查询记账天数以及笔数失败", e);
                 }
             }
         });
@@ -175,7 +155,7 @@ public class FragmentMine extends Fragment {
                     mineBudgetAmount.setText(budget.getBudgetAmount() + "元");
                     mineRemainAmount.setText(budget.getRemainAmount() + "元");
                 } else {
-                    showToast("mine查询预算信息失败", e);
+                    showToast(getActivity(), "mine查询预算信息失败", e);
                 }
             }
         });
@@ -191,7 +171,7 @@ public class FragmentMine extends Fragment {
                     //获取存钱完成次数
                     mineSavingComplete.setText(integer + "次");
                 } else {
-                    showToast("mine查询存钱完成次数失败", e);
+                    showToast(getActivity(), "mine查询存钱完成次数失败", e);
                 }
             }
         });
@@ -207,7 +187,7 @@ public class FragmentMine extends Fragment {
                     //获取剩余存钱金额
                     mineSavingNeed.setText(list.get(0).getSavingAmount() - list.get(0).getSavingAlready() + "元");
                 } else {
-                    showToast("mine查询剩余存钱金额失败", e);
+                    showToast(getActivity(), "mine查询剩余存钱金额失败", e);
                 }
             }
         });

@@ -10,7 +10,6 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -38,6 +37,8 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
+
+import static com.example.tallybook.common.ShowToast.showToast;
 
 /**
  * 明细页面
@@ -149,27 +150,6 @@ public class FragmentBudget extends Fragment {
     }
 
     /**
-     * @param msg 要显示的信息
-     * @return void
-     * @Author MACHENIKE
-     * @Description TODO 显示Toast信息
-     **/
-    private void showToast(String msg) {
-        Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
-    }
-
-    /**
-     * @param msg 要显示的信息
-     * @param e   异常信息
-     * @return void
-     * @Author MACHENIKE
-     * @Description TODO 显示Toast信息
-     **/
-    private void showToast(String msg, BmobException e) {
-        Toast.makeText(getActivity(), msg + "\n" + e.getErrorCode() + "\n" + e.getMessage(), Toast.LENGTH_SHORT).show();
-    }
-
-    /**
      * @return void
      * @Author MACHENIKE
      * @Description TODO 设置各个控件的监听器
@@ -202,11 +182,11 @@ public class FragmentBudget extends Fragment {
                     @Override
                     public void done(BmobException e) {
                         if (e == null) {
-                            showToast("更新成功");
+                            showToast(getActivity(), "更新成功");
                             //将新信息显示在界面中
                             showData();
                         } else {
-                            showToast("更新失败", e);
+                            showToast(getActivity(), "更新失败", e);
                         }
                     }
                 });
@@ -254,10 +234,10 @@ public class FragmentBudget extends Fragment {
                         @Override
                         public void done(String s, BmobException e) {
                             if (e == null) {
-                                showToast("插入存钱成功");
+                                showToast(getActivity(), "插入存钱成功");
                                 showData();
                             } else {
-                                showToast("插入预算失败", e);
+                                showToast(getActivity(), "插入预算失败", e);
                             }
                         }
                     });
@@ -269,10 +249,10 @@ public class FragmentBudget extends Fragment {
                         @Override
                         public void done(BmobException e) {
                             if (e == null) {
-                                showToast("更新成功");
+                                showToast(getActivity(), "更新成功");
                                 showData();
                             } else {
-                                showToast("修改失败", e);
+                                showToast(getActivity(), "修改失败", e);
                             }
                         }
                     });
@@ -297,7 +277,7 @@ public class FragmentBudget extends Fragment {
     @SuppressLint({"SetTextI18n", "DefaultLocale"})
     private void showData() {
 
-        budgetMonth.setText(String.format("%02d",new Date().getMonth() + 1) + "月总预算");
+        budgetMonth.setText(String.format("%02d", new Date().getMonth() + 1) + "月总预算");
         //显示预算信息
         double budgetAmountNum = budget.getBudgetAmount();
         double remainAmountNum = budget.getRemainAmount();
@@ -354,7 +334,7 @@ public class FragmentBudget extends Fragment {
                     monthOut.setText(sumOut + "元");
 
                 } else {
-                    showToast("查询明细失败", e);
+                    showToast(getActivity(), "查询明细失败", e);
                 }
             }
         });
@@ -408,9 +388,9 @@ public class FragmentBudget extends Fragment {
                             @Override
                             public void done(String s, BmobException e) {
                                 if (e == null) {
-                                    showToast("自动写入预算成功");
+                                    showToast(getActivity(), "自动写入预算成功");
                                 } else {
-                                    showToast("自动写入预算失败", e);
+                                    showToast(getActivity(), "自动写入预算失败", e);
                                 }
                             }
                         });
@@ -421,7 +401,7 @@ public class FragmentBudget extends Fragment {
                     showData();
 
                 } else {
-                    showToast("budget页面查询预算信息失败", e);
+                    showToast(getActivity(), "budget页面查询预算信息失败", e);
                 }
             }
         });
@@ -454,7 +434,7 @@ public class FragmentBudget extends Fragment {
                         savingEdit.setText("编辑存钱计划");
                     }
                 } else {
-                    showToast("budget查询存钱信息失败", e);
+                    showToast(getActivity(), "budget查询存钱信息失败", e);
                 }
             }
         });

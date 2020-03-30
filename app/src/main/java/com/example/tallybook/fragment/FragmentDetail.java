@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -37,6 +36,8 @@ import cn.bmob.v3.datatype.BmobPointer;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 
+import static com.example.tallybook.common.ShowToast.showToast;
+
 public class FragmentDetail extends Fragment implements DateTimeDialog.MyOnDateSetListener {
 
     /**
@@ -47,7 +48,7 @@ public class FragmentDetail extends Fragment implements DateTimeDialog.MyOnDateS
     /**
      * 用户头像
      */
-    private ImageView linkMine;
+    private ImageView userHeadImg;
 
     /**
      * 选择年月按钮
@@ -109,31 +110,11 @@ public class FragmentDetail extends Fragment implements DateTimeDialog.MyOnDateS
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        initAppBar();
         initView();
-
         setListeners();
-    }
 
-    /**
-     * @param msg 要显示的信息
-     * @return void
-     * @Author MACHENIKE
-     * @Description TODO 显示Toast信息
-     **/
-    private void showToast(String msg) {
-        Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
-    }
-
-    /**
-     * @param msg 要显示的信息
-     * @param e   异常信息
-     * @return void
-     * @Author MACHENIKE
-     * @Description TODO 显示Toast信息
-     **/
-    private void showToast(String msg, BmobException e) {
-        Toast.makeText(getActivity(), msg + "\n" + e.getErrorCode() + "\n" + e.getMessage(), Toast.LENGTH_SHORT).show();
+        onDateSet(new Date());
+        refresh();
     }
 
     /**
@@ -158,7 +139,6 @@ public class FragmentDetail extends Fragment implements DateTimeDialog.MyOnDateS
      * @Description TODO 刷新主体View
      **/
     private void refresh() {
-
         //获取月收入与月支出
         Calendar startCal = Calendar.getInstance();
         startCal.set(Calendar.YEAR, year);
@@ -198,7 +178,7 @@ public class FragmentDetail extends Fragment implements DateTimeDialog.MyOnDateS
 
                     showMonthDetail(list);
                 } else {
-                    showToast("查询明细失败_detail", e);
+                    showToast(getActivity(), "查询明细失败", e);
                 }
             }
         });
@@ -232,32 +212,22 @@ public class FragmentDetail extends Fragment implements DateTimeDialog.MyOnDateS
     /**
      * @return void
      * @Author MACHENIKE
-     * @Description TODO 获取View上的控件
+     * @Description TODO 获取控件以及初始化
      **/
     private void initView() {
-        recyclerView = Objects.requireNonNull(getActivity()).findViewById(R.id.detailDay_recyclerView);
-        swipeRefreshLayout = getActivity().findViewById(R.id.swipe);
-
-        swipeRefreshLayout.setColorSchemeResources(R.color.md_green_400, R.color.md_red_400, R.color.md_blue_400);
-    }
-
-    /**
-     * @return void
-     * @Author MACHENIKE
-     * @Description TODO 获取AppBar上的控件以及初始化
-     **/
-    private void initAppBar() {
         user = BmobUser.getCurrentUser(User.class);
 
-        linkMine = Objects.requireNonNull(getActivity()).findViewById(R.id.link_mine);
+        userHeadImg = Objects.requireNonNull(getActivity()).findViewById(R.id.link_mine);
         selectYm = getActivity().findViewById(R.id.selectYM);
         income = getActivity().findViewById(R.id.income);
         outcome = getActivity().findViewById(R.id.outcome);
 
         dateTimeDialog = new DateTimeDialog(getActivity(), this);
 
-        //按当时时间初始化
-        onDateSet(new Date());
+        recyclerView = Objects.requireNonNull(getActivity()).findViewById(R.id.detailDay_recyclerView);
+        swipeRefreshLayout = getActivity().findViewById(R.id.swipe);
+
+        swipeRefreshLayout.setColorSchemeResources(R.color.md_green_400, R.color.md_red_400, R.color.md_blue_400);
     }
 
     @Override
@@ -273,7 +243,5 @@ public class FragmentDetail extends Fragment implements DateTimeDialog.MyOnDateS
         cal.setTime(date);
         year = cal.get(Calendar.YEAR);
         month = cal.get(Calendar.MONTH) + 1;
-
-        refresh();
     }
 }

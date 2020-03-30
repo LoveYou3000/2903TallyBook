@@ -4,6 +4,7 @@ import cn.bmob.v3.BmobUser;
 
 /**
  * 用户实体类
+ *
  * @author MACHENIKE
  */
 public class User extends BmobUser {

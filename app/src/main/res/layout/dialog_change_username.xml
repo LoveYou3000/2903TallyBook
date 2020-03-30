@@ -18,7 +18,7 @@
             android:textColor="#000"
             android:textSize="18sp"
             android:gravity="center_horizontal"
-            android:text="@string/username_ch"
+            android:text="@string/username"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 

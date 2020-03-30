@@ -17,6 +17,7 @@ import cn.bmob.v3.BmobUser;
 
 /**
  * 开始闪屏
+ *
  * @author MACHENIKE
  */
 public class Splash extends AppCompatActivity {
@@ -26,7 +27,8 @@ public class Splash extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        Bmob.initialize(this,"4c0d8bc51d99076175282cb6010f0f85");
+        //初始化Bmob
+        Bmob.initialize(this, "4c0d8bc51d99076175282cb6010f0f85");
 
         new Timer().schedule(new TimerTask() {
             @Override
@@ -34,10 +36,10 @@ public class Splash extends AppCompatActivity {
                 if (BmobUser.isLogin()) {
                     startActivity(new Intent(Splash.this, MainActivity.class));
                 } else {
-                    startActivity(new Intent(Splash.this,Login.class));
+                    startActivity(new Intent(Splash.this, Login.class));
                 }
                 finish();
             }
-        }, 1000);
+        }, 2000);
     }
 }
